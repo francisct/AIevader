@@ -5,11 +5,14 @@ using System.Collections.Generic;
 public class PathfindingNode : MonoBehaviour
 {
     
+    //[System.NonSerialized]
     public int nodeID;
     private float heuristic;
+    //[System.NonSerialized]
     public List<bool> explored = new List<bool>();
     private float distanceSoFar;
     private int heapIndex;
+    //[System.NonSerialized]
     public List<PathfindingNode> backReference = new List<PathfindingNode>();
     public List<PathfindingNode> neighbors = new List<PathfindingNode>();
 

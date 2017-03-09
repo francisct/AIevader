@@ -18,11 +18,11 @@ public class NPC : MonoBehaviour {
     void Start()
     {
         NPCID = GameObject.FindGameObjectsWithTag("Pathfinder").Length-1;
-        foreach(GameObject node in GameObject.FindGameObjectsWithTag("Node"))
+        /*foreach(GameObject node in GameObject.FindGameObjectsWithTag("Node"))
         {
             node.GetComponent<PathfindingNode>().explored.Add(false);
-        }
-        if (!OptionsController.povMode) relativeSpeed = (GameObject.Find("Scripts").GetComponent<Instantiator>().gridSize) / 5.0f;
+        }*/
+        if (!OptionsController.povMode) relativeSpeed = (GameObject.Find("NodesContainer").GetComponent<Instantiator>().gridSize) / 5.0f;
         else relativeSpeed = 2f;
 
         s_arrive = GetComponent<S_Arrive>();

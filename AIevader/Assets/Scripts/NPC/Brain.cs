@@ -31,7 +31,7 @@ public class Brain : MonoBehaviour {
 
     void SelectNewGoal()
     {
-        PathfindingNode[] nodes = GameObject.Find("Scripts").GetComponentsInChildren<PathfindingNode>();
+        PathfindingNode[] nodes = GameObject.Find("NodesContainer").GetComponentsInChildren<PathfindingNode>();
         int rnd = Random.Range(0, nodes.Length);
         pathfinder.SetGoalNode(nodes[rnd]);
     }

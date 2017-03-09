@@ -6,16 +6,18 @@ public class Instantiator : MonoBehaviour {
     public int gridSize;
     int centerOffset;
     public GameObject markers;
-    public GameObject clickedNode;
     public GameObject pathfinder;
     public static bool ready;
+    GameObject[] enemies;
 
     [SerializeField]
     GameObject povNodeTemplatesParent;
     // Use this for initialization
     void Start() {
+        enemies = GameObject.FindGameObjectsWithTag("Pathfinder");
         generateNodes();
-        makePlayer();
+        SetEnemiesIds(enemies);
+        ready = true;
     }
 
     // Update is called once per frame
@@ -23,10 +25,12 @@ public class Instantiator : MonoBehaviour {
 
     }
 
-    void makePlayer()
+    void SetEnemiesIds(GameObject[] enemies)
     {
-        //GameObject theSubject = (GameObject)Instantiate(pathfinder, new Vector3(0.0f, 0.5f, 5.0f), Quaternion.identity);
-        ready = true;
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            enemies[i].GetComponent<NPC>().NPCID = i;
+        }
     }
     /*Instantiates a bunch of cubes and sets its neighbors.  Pathfinding can be done on
     * a Hierarchical Grid structure or an Undirected Graph.  This function just uses an
@@ -60,7 +64,10 @@ public class Instantiator : MonoBehaviour {
         for (int i = 0; i < povNodeCopies.Length; i++)
         {
             povNodeCopies[i].transform.SetParent(transform);
-            povNodeCopies[i].GetComponent<PathfindingNode>().nodeID = i;
+            PathfindingNode pathfindingNode = povNodeCopies[i].GetComponent<PathfindingNode>();
+            pathfindingNode.nodeID = i;
+            pathfindingNode.explored = new List<bool>(new bool[enemies.Length]);
+            pathfindingNode.backReference = new List<PathfindingNode>(new PathfindingNode[enemies.Length]);
         }
     }
 
@@ -78,7 +85,8 @@ public class Instantiator : MonoBehaviour {
                         0f,
                         50f - (0.5f * cubeScale) - cubeScale * j),
                     Quaternion.identity);
-                marker.GetComponent<PathfindingNode>().nodeID = (i * gridSize) + j;
+                PathfindingNode pathfindingNode = marker.GetComponent<PathfindingNode>();
+                pathfindingNode.nodeID = (i * gridSize) + j;
                 marker.transform.localScale = new Vector3(100.0f / gridSize, 1f, 100.0f / gridSize);
                 marker.GetComponent<Renderer>().material.color =
                     new Color(Random.Range(0.8f, 1.0f),
@@ -86,7 +94,9 @@ public class Instantiator : MonoBehaviour {
                     Random.Range(0.8f, 1.0f), 1);
                 marker.transform.SetParent(transform);
                 tempGrid[i, j] = marker;
-                marker.GetComponent<PathfindingNode>().wallOnTop();
+                pathfindingNode.wallOnTop();
+                pathfindingNode.explored = new List<bool>(new bool[enemies.Length]);
+                pathfindingNode.backReference = new List<PathfindingNode>(new PathfindingNode[enemies.Length]);
             }
         }
 

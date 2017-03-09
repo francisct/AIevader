@@ -18,7 +18,7 @@ public class Pathfinding : MonoBehaviour {
     void Start()
     {
         path2Follow = new List<PathfindingNode>();
-        makerRef = GameObject.Find("Scripts");
+        makerRef = GameObject.Find("NodesContainer");
         Instantiator tempRef = makerRef.GetComponent<Instantiator>();
         maxNumNodes = tempRef.gridSize * tempRef.gridSize;
         openHeap = new NodeBinaryHeap(2048);
@@ -209,7 +209,7 @@ public class Pathfinding : MonoBehaviour {
         //path itself orange
         //uninvolved black
 
-        foreach (GameObject node in GameObject.FindGameObjectsWithTag("Node"))
+        foreach (Transform node in makerRef.transform)
         {
             if (node.GetComponent<PathfindingNode>().explored[NPCID] == true)
             {
@@ -237,7 +237,8 @@ public class Pathfinding : MonoBehaviour {
 
     void CleanUp(int NPCID)
     {
-        foreach (GameObject node in GameObject.FindGameObjectsWithTag("Node"))
+        
+        foreach (Transform node in makerRef.transform)
         {
             PathfindingNode cache = node.GetComponent<PathfindingNode>();
             cache.explored[NPCID] = false;
@@ -252,11 +253,7 @@ public class Pathfinding : MonoBehaviour {
         }
         openHeap = new NodeBinaryHeap(2048);
         openHeap.currentItemCount = 0;
-
-        foreach (GameObject node in GameObject.FindGameObjectsWithTag("Node"))
-        {
-            node.GetComponent<PathfindingNode>().explored[NPCID] = false;
-        }
+        
         path2Follow.Clear();
 
     }
