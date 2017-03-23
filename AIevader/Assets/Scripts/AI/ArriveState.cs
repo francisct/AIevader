@@ -45,6 +45,10 @@ public class ArriveState : IEnemyState
     {
         aiController.aiRole = AIController.role.Wander;
     }
+    public void ToCombatState()
+    {
+        aiController.aiRole = AIController.role.Combat;
+    }
 
     public void UpdateState()
     {

@@ -36,4 +36,9 @@ public interface IEnemyState
     /// Transition to Arrive state, in this state, the AI will simply go to a specific point in the map and transition to idle state
     /// </summary>
     void ToArriveState();
+
+    /// <summary>
+    /// Transition to Combat state
+    /// </summary>
+    void ToCombatState();
 }

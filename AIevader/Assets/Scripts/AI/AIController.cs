@@ -2,7 +2,7 @@
 
 public class AIController : MonoBehaviour
 {
-    public enum role { Wander, Chase, Idle, Arrive }
+    public enum role { Wander, Chase, Idle, Arrive, Combat }
     [HideInInspector]
     public IEnemyState currentState;
     public role aiRole;
@@ -15,6 +15,8 @@ public class AIController : MonoBehaviour
     public IdleState idleState;
     [HideInInspector]
     public ArriveState arriveState;
+    [HideInInspector]
+    public CombatState combatState;
     [HideInInspector]
     public SteeringAlign steeringAlign;
     [HideInInspector]
@@ -30,6 +32,7 @@ public class AIController : MonoBehaviour
         chaseState = new ChaseState(this);
         idleState = new IdleState(this);
         arriveState = new ArriveState(this);
+        combatState = new CombatState(this);
 
         steeringAlign = GetComponent<SteeringAlign>();
         steeringArrive = GetComponent<SteeringArrive>();
@@ -77,6 +80,10 @@ public class AIController : MonoBehaviour
         else if (currentState != arriveState && aiRole == role.Arrive)
         {
             currentState = arriveState;
+        }
+        else if (currentState != combatState && aiRole == role.Combat)
+        {
+            currentState = combatState;
         }
     }
         

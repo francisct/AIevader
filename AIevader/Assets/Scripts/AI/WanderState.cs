@@ -42,6 +42,10 @@ public class WanderState : IEnemyState
     {
         throw new NotImplementedException();
     }
+    public void ToCombatState()
+    {
+        aiController.aiRole = AIController.role.Combat;
+    }
 
     public void UpdateState()
     {

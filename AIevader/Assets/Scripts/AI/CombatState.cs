@@ -1,13 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-public class ChaseState : IEnemyState
+public class CombatState : IEnemyState
 {
-    private Transform chaseTarget;
     private AIController aiController;
-    public ChaseState(AIController aiController)
+    public CombatState(AIController aiController)
     {
-        chaseTarget = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         this.aiController = aiController;
     }
     public void OnCollisionEnter(Collision other)
@@ -17,12 +15,12 @@ public class ChaseState : IEnemyState
 
     public void OnTriggerEnter(Collider other)
     {
-        ;//maybe an attack range and go to attack state
+        ;
     }
 
     public void OnTriggerExit(Collider other)
     {
-        ;
+        ToChaseState();
     }
 
     public void ToArriveState()
@@ -32,7 +30,7 @@ public class ChaseState : IEnemyState
 
     public void ToChaseState()
     {
-        ;
+        aiController.aiRole = AIController.role.Chase;
     }
 
     public void ToIdleState()
@@ -44,13 +42,14 @@ public class ChaseState : IEnemyState
     {
         aiController.aiRole = AIController.role.Wander;
     }
+
     public void ToCombatState()
     {
-        aiController.aiRole = AIController.role.Combat;
+        ;
     }
 
     public void UpdateState()
     {
-        //Set movement target or pathfinding target to chaseTarget.position
+        ;//combat stuff here
     }
 }
