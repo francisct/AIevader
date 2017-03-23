@@ -3,48 +3,50 @@ using UnityEngine;
 
 public class ChaseState : IEnemyState
 {
+    private Transform chaseTarget;
     private AIController aiController;
     public ChaseState(AIController aiController)
     {
+        chaseTarget = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         this.aiController = aiController;
     }
     public void OnCollisionEnter(Collision other)
     {
-        throw new NotImplementedException();
+        ;
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        throw new NotImplementedException();
+        ;//maybe an attack range and go to attack state
     }
 
     public void OnTriggerExit(Collider other)
     {
-        throw new NotImplementedException();
+        ;
     }
 
     public void ToArriveState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Arrive;
     }
 
     public void ToChaseState()
     {
-        throw new NotImplementedException();
+        ;
     }
 
     public void ToIdleState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Idle;
     }
 
     public void ToWanderState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Wander;
     }
 
     public void UpdateState()
     {
-        throw new NotImplementedException();
+        //Set movement target or pathfinding target to chaseTarget.position
     }
 }

@@ -10,41 +10,41 @@ public class IdleState : IEnemyState
     }
     public void OnCollisionEnter(Collision other)
     {
-        throw new NotImplementedException();
+        ;
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        throw new NotImplementedException();
+        ToChaseState();
     }
 
     public void OnTriggerExit(Collider other)
     {
-        throw new NotImplementedException();
+        ;
     }
 
     public void ToArriveState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Arrive;
     }
 
     public void ToChaseState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Chase;
     }
 
     public void ToIdleState()
     {
-        throw new NotImplementedException();
+        ;
     }
 
     public void ToWanderState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Wander;
     }
 
     public void UpdateState()
     {
-        throw new NotImplementedException();
+        ;
     }
 }
