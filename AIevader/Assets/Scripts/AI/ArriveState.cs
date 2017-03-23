@@ -4,6 +4,8 @@ using UnityEngine;
 public class ArriveState : IEnemyState
 {
     private AIController aiController;
+    public Transform target;
+
     public ArriveState(AIController aiController)
     {
         this.aiController = aiController;
@@ -26,26 +28,30 @@ public class ArriveState : IEnemyState
 
     public void ToArriveState()
     {
-        throw new NotImplementedException();
+        Debug.Log("Already in arrive state");
     }
 
     public void ToChaseState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Chase;
     }
 
     public void ToIdleState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Idle;
     }
 
     public void ToWanderState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Wander;
     }
 
     public void UpdateState()
     {
-        throw new NotImplementedException();
+        if (aiController.steeringArrive.target == null)
+        {
+            aiController.steeringArrive.target = target.position;
+            aiController.steeringAlign.target = target.rotation.y;
+        }
     }
 }

@@ -15,6 +15,14 @@ public class AIController : MonoBehaviour
     public IdleState idleState;
     [HideInInspector]
     public ArriveState arriveState;
+    [HideInInspector]
+    public SteeringAlign steeringAlign;
+    [HideInInspector]
+    public SteeringArrive steeringArrive;
+    [HideInInspector]
+    public SteeringSeek steeringSeek;
+    [HideInInspector]
+    public SteeringWander steeringWander;
 
     void Awake()
     {
@@ -22,6 +30,11 @@ public class AIController : MonoBehaviour
         chaseState = new ChaseState(this);
         idleState = new IdleState(this);
         arriveState = new ArriveState(this);
+
+        steeringAlign = GetComponent<SteeringAlign>();
+        steeringArrive = GetComponent<SteeringArrive>();
+        steeringSeek = GetComponent<SteeringSeek>();
+        steeringWander = GetComponent<SteeringWander>();
     }
     // Use this for initialization
     void Start()
@@ -49,19 +62,19 @@ public class AIController : MonoBehaviour
     }
     void SelectRole()
     {
-        if (aiRole == role.Wander)
+        if (currentState != wanderState && aiRole == role.Wander)
         {
             currentState = wanderState;
         }
-        else if (aiRole == role.Chase)
+        else if (currentState != chaseState && aiRole == role.Chase)
         {
             currentState = chaseState;
         }
-        else if (aiRole == role.Idle)
+        else if (currentState != idleState && aiRole == role.Idle)
         {
             currentState = idleState;
         }
-        else if (aiRole == role.Arrive)
+        else if (currentState != arriveState && aiRole == role.Arrive)
         {
             currentState = arriveState;
         }
