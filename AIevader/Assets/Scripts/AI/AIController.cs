@@ -65,5 +65,6 @@ public class AIController : MonoBehaviour
         {
             currentState = arriveState;
         }
+    }
         
 }
