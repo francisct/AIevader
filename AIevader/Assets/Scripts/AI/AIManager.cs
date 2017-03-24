@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class AIManager : MonoBehaviour
 {
-    public static List<AIController> allAIs = new List<AIController>();
+    public AIController[] allAIs;
+    public ChokePoint[] chokePoints;
+    private static List<ChokePoint> availableChokePoints = new List<ChokePoint>();
+    private static List<ChokePoint> occupiedChokePoints = new List<ChokePoint>();
     private static List<AIController> commandableAIs = new List<AIController>();
+    private static Dictionary<ChokePoint, AIController> chokePointAIs = new Dictionary<ChokePoint, AIController>();
     private static List<AIController> busyAIs = new List<AIController>();
     private static GameObject player;
     private static int currentAIsAlive;
@@ -21,23 +25,32 @@ public class AIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        AssignAIRoles();
+        availableChokePoints.Sort((x, y) => x.distance.CompareTo(y.distance));
+        UpdateChokePointAI();
     }
     private void InitializeLists()
     {
-        foreach (GameObject ai in GameObject.FindGameObjectsWithTag("Enemy"))
-        {
-            allAIs.Add(ai.GetComponent<AIController>());
-        }
-
         commandableAIs.AddRange(allAIs);
+        availableChokePoints.AddRange(chokePoints);
     }
 
-    private void AssignAIRoles()
+    private void AssignRole(AIController ai)
     {
         if (!IsThereAnAIChasing())
         {
-            SendAIToChase(FindClosestAvailableAI(player));
+            SendAIToChase(ai);
+        }
+        else if(availableChokePoints.Count > 0)
+        {
+            var chokePoint = FindBestChokePoint();
+            if (chokePoint)
+            {
+                SendAIToArrive(ai, chokePoint);
+            }
+        }
+        else
+        {
+            SendAIToChase(ai);
         }
     }
 
@@ -47,8 +60,14 @@ public class AIManager : MonoBehaviour
     /// <param name="ai"></param>
     public static void OccupiedAI(AIController ai)
     {
-        commandableAIs.Remove(ai);
-        busyAIs.Add(ai);
+        if (commandableAIs.Contains(ai))
+        {
+            commandableAIs.Remove(ai);
+        }
+        if (!busyAIs.Contains(ai))
+        {
+            busyAIs.Add(ai);
+        }
     }
     /// <summary>
     /// Mark an AI as commandable
@@ -59,12 +78,22 @@ public class AIManager : MonoBehaviour
         busyAIs.Remove(ai);
         commandableAIs.Add(ai);
     }
+    public static void OccupiedChokePoint(ChokePoint cp)
+    {
+        occupiedChokePoints.Add(cp);
+        availableChokePoints.Remove(cp);
+    }
+    public static void FreeChokePoint(ChokePoint cp)
+    {
+        occupiedChokePoints.Remove(cp);
+        availableChokePoints.Add(cp);
+    }
     /// <summary>
-    /// Find the closest available AI to Gameobject g
+    /// Find the closest available AI to Transform t
     /// </summary>
-    /// <param name="g"></param>
+    /// <param name="t"></param>
     /// <returns></returns>
-    private AIController FindClosestAvailableAI(GameObject g)
+    private AIController FindClosestAvailableAI(Transform t)
     {
         AIController closestAI = null;
         float closestDistance = Mathf.Infinity;
@@ -72,7 +101,7 @@ public class AIManager : MonoBehaviour
         foreach (AIController ai in commandableAIs)
         {
 
-            float distance = (ai.transform.position - g.transform.position).magnitude;
+            float distance = (ai.transform.position - t.position).magnitude;
             if (distance < closestDistance)
             {
                 closestAI = ai;
@@ -121,15 +150,46 @@ public class AIManager : MonoBehaviour
         ai.aiRole = AIController.role.Idle;
     }
 
-    private void SendAIToArrive(AIController ai)
+    private void SendAIToArrive(AIController ai, ChokePoint target)
     {
         OccupiedAI(ai);
+        chokePointAIs[target] = ai;
+        OccupiedChokePoint(target);
         ai.aiRole = AIController.role.Arrive;
+        ai.arriveState.target = target;
     }
 
     private void SendAIToCombat(AIController ai)
     {
         OccupiedAI(ai);
         ai.aiRole = AIController.role.Combat;
+    }
+    public void ReportSawPlayer(AIController ai)
+    {
+        AssignRole(ai);
+    }
+    private ChokePoint FindBestChokePoint()
+    {
+        if (availableChokePoints[0])
+        {
+            return availableChokePoints[0];
+        }
+        return null;
+    }
+    private void UpdateChokePointAI()
+    {
+        List<ChokePoint> keys = new List<ChokePoint>(chokePointAIs.Keys);
+        foreach(ChokePoint key in keys)
+        {
+            var bestChokePoint = FindBestChokePoint();
+            if (bestChokePoint && bestChokePoint.distance < key.distance)
+            {
+                var tmpAI = chokePointAIs[key];
+                SendAIToArrive(tmpAI, bestChokePoint);
+                chokePointAIs.Remove(key);
+                FreeChokePoint(key);
+               
+            }
+        }
     }
 }

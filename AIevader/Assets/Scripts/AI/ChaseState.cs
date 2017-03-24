@@ -17,7 +17,11 @@ public class ChaseState : IEnemyState
 
     public void OnTriggerEnter(Collider other)
     {
-        ;//maybe an attack range and go to attack state
+        if(other.tag == "Player")
+        {
+            ToCombatState();
+        }
+        
     }
 
     public void OnTriggerExit(Collider other)

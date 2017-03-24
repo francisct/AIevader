@@ -50,6 +50,7 @@ public class CombatState : IEnemyState
 
     public void UpdateState()
     {
+        aiController.steeringSeek.target = aiController.transform.position;
         if (aiController.hitPoints <= 0)
         {
             AIManager.AIKilled(aiController);
