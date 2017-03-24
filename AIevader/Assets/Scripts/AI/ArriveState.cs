@@ -13,22 +13,22 @@ public class ArriveState : IEnemyState
 
     public void OnCollisionEnter(Collision other)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnTriggerExit(Collider other)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void ToArriveState()
     {
-        Debug.Log("Already in arrive state");
+
     }
 
     public void ToChaseState()

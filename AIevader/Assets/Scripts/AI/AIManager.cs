@@ -19,7 +19,7 @@ public class AIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
     private void InitializeLists()
     {
@@ -60,6 +60,7 @@ public class AIManager : MonoBehaviour
             if (distance < closestDistance)
             {
                 closestAI = ai;
+                closestDistance = distance;
             }
 
         }
@@ -71,5 +72,29 @@ public class AIManager : MonoBehaviour
     {
         OccupiedAI(ai);
         ai.aiRole = AIController.role.Chase;
+    }
+
+    private void SendAIToWander(AIController ai)
+    {
+        OccupiedAI(ai);
+        ai.aiRole = AIController.role.Wander;
+    }
+
+    private void SendAIToIdle(AIController ai)
+    {
+        OccupiedAI(ai);
+        ai.aiRole = AIController.role.Idle;
+    }
+
+    private void SendAIToArrive(AIController ai)
+    {
+        OccupiedAI(ai);
+        ai.aiRole = AIController.role.Arrive;
+    }
+
+    private void SendAIToCombat(AIController ai)
+    {
+        OccupiedAI(ai);
+        ai.aiRole = AIController.role.Combat;
     }
 }

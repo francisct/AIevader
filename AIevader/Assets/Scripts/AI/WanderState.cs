@@ -10,38 +10,39 @@ public class WanderState : IEnemyState
     }
     public void OnCollisionEnter(Collision other)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void OnTriggerExit(Collider other)
     {
-        throw new NotImplementedException();
+        
     }
 
     public void ToArriveState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Arrive;
     }
 
     public void ToChaseState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Chase;
     }
 
     public void ToIdleState()
     {
-        throw new NotImplementedException();
+        aiController.aiRole = AIController.role.Idle;
     }
 
     public void ToWanderState()
     {
-        throw new NotImplementedException();
+        
     }
+
     public void ToCombatState()
     {
         aiController.aiRole = AIController.role.Combat;
