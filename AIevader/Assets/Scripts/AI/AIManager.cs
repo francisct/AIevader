@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class AIManager : MonoBehaviour
 {
-    public AIController[] AIs;
-    private List<AIController> commandableAIs = new List<AIController>();
-    private List<AIController> busyAIs = new List<AIController>();
-    private GameObject player;
+    public static AIController[] AIs;
+    private static List<AIController> commandableAIs = new List<AIController>();
+    private static List<AIController> busyAIs = new List<AIController>();
+    private static GameObject player;
+    private static int currentAIsAlive;
 
     // Use this for initialization
     void Start()
     {
         InitializeLists();
+        currentAIsAlive = commandableAIs.Count;
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
@@ -29,7 +31,7 @@ public class AIManager : MonoBehaviour
     /// Mark an AI as busy
     /// </summary>
     /// <param name="ai"></param>
-    public void OccupiedAI(AIController ai)
+    public static void OccupiedAI(AIController ai)
     {
         commandableAIs.Remove(ai);
         busyAIs.Add(ai);
@@ -38,7 +40,7 @@ public class AIManager : MonoBehaviour
     /// Mark an AI as commandable
     /// </summary>
     /// <param name="ai"></param>
-    public void FreeAI(AIController ai)
+    public static void FreeAI(AIController ai)
     {
         busyAIs.Remove(ai);
         commandableAIs.Add(ai);
@@ -66,6 +68,13 @@ public class AIManager : MonoBehaviour
         }
 
         return closestAI;
+    }
+
+    public static void AIKilled(AIController ai)
+    {
+        commandableAIs.Remove(ai);
+        busyAIs.Remove(ai);
+        currentAIsAlive--;
     }
 
     private void SendAIToChase(AIController ai)

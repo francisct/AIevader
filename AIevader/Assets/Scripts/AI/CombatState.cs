@@ -50,6 +50,9 @@ public class CombatState : IEnemyState
 
     public void UpdateState()
     {
-        ;//combat stuff here
+        if (aiController.hitPoints <= 0)
+        {
+            AIManager.AIKilled(aiController);
+        }
     }
 }

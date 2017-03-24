@@ -7,6 +7,8 @@ public class AIController : MonoBehaviour
     public IEnemyState currentState;
     public role aiRole;
 
+    public int hitPoints = 50;
+
     [HideInInspector]
     public WanderState wanderState;
     [HideInInspector]
