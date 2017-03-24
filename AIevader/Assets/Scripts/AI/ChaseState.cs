@@ -51,6 +51,12 @@ public class ChaseState : IEnemyState
 
     public void UpdateState()
     {
-        //Set movement target or pathfinding target to chaseTarget.position
+        aiController.steeringSeek.target = chaseTarget.position;
+        aiController.steeringAlign.target = chaseTarget.rotation.y;
+        if (aiController.steeringArrive.enabled || aiController.steeringWander.enabled)
+        {
+            aiController.steeringArrive.enabled = false;
+            aiController.steeringWander.enabled = false;
+        }
     }
 }

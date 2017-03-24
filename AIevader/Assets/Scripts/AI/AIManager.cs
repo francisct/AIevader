@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AIManager : MonoBehaviour
 {
-    public static AIController[] AIs;
+    public static List<AIController> allAIs = new List<AIController>();
     private static List<AIController> commandableAIs = new List<AIController>();
     private static List<AIController> busyAIs = new List<AIController>();
     private static GameObject player;
@@ -21,12 +21,26 @@ public class AIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        AssignAIRoles();
     }
     private void InitializeLists()
     {
-        commandableAIs.AddRange(AIs);
+        foreach (GameObject ai in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            allAIs.Add(ai.GetComponent<AIController>());
+        }
+
+        commandableAIs.AddRange(allAIs);
     }
+
+    private void AssignAIRoles()
+    {
+        if (!IsThereAnAIChasing())
+        {
+            SendAIToChase(FindClosestAvailableAI(player));
+        }
+    }
+
     /// <summary>
     /// Mark an AI as busy
     /// </summary>
@@ -68,6 +82,18 @@ public class AIManager : MonoBehaviour
         }
 
         return closestAI;
+    }
+
+    private bool IsThereAnAIChasing()
+    {
+        foreach (AIController ai in busyAIs)
+        {
+            if (ai.aiRole == AIController.role.Chase)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void AIKilled(AIController ai)
