@@ -55,10 +55,19 @@ public class ArriveState : IEnemyState
 
     public void UpdateState()
     {
+        if (aiController.steeringSeek.enabled || aiController.steeringWander.enabled)
+        {
+            aiController.steeringSeek.enabled = false;
+            aiController.steeringWander.enabled = false;
+        }
+        if (!aiController.steeringArrive.enabled)
+        {
+            aiController.steeringArrive.enabled = true;
+        }
         if (target != null)
         {
             aiController.steeringArrive.target = target.transform.position;
-            aiController.steeringAlign.target = target.transform.rotation.y;
+            aiController.steeringAlign.target = Mathf.Atan2(aiController.steeringArrive.velocity.x, aiController.steeringArrive.velocity.z) * Mathf.Rad2Deg; ;
         }
         if(target.transform.position == aiController.transform.position)
         {
