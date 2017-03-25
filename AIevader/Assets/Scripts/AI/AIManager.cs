@@ -178,18 +178,29 @@ public class AIManager : MonoBehaviour
     }
     private void UpdateChokePointAI()
     {
-        List<ChokePoint> keys = new List<ChokePoint>(chokePointAIs.Keys);
-        foreach(ChokePoint key in keys)
+        if (availableChokePoints.Count == 0)
         {
-            var bestChokePoint = FindBestChokePoint();
-            if (bestChokePoint && bestChokePoint.distance < key.distance)
+            foreach (AIController ai in commandableAIs)
             {
-                var tmpAI = chokePointAIs[key];
-                SendAIToArrive(tmpAI, bestChokePoint);
-                chokePointAIs.Remove(key);
-                FreeChokePoint(key);
-               
+                SendAIToWander(ai);
             }
         }
+        else
+        {
+            List<ChokePoint> keys = new List<ChokePoint>(chokePointAIs.Keys);
+            foreach (ChokePoint key in keys)
+            {
+                var bestChokePoint = FindBestChokePoint();
+                if (bestChokePoint && bestChokePoint.distance < key.distance)
+                {
+                    var tmpAI = chokePointAIs[key];
+                    SendAIToArrive(tmpAI, bestChokePoint);
+                    chokePointAIs.Remove(key);
+                    FreeChokePoint(key);
+
+                }
+            }
+        }
+
     }
 }

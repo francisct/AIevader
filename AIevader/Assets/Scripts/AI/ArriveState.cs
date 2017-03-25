@@ -67,7 +67,7 @@ public class ArriveState : IEnemyState
         if (target != null)
         {
             aiController.steeringArrive.target = target.transform.position;
-            aiController.steeringAlign.target = Mathf.Atan2(aiController.steeringArrive.velocity.x, aiController.steeringArrive.velocity.z) * Mathf.Rad2Deg; ;
+            aiController.steeringAlign.target = Mathf.Atan2(aiController.steeringArrive.velocity.x, aiController.steeringArrive.velocity.z) * Mathf.Rad2Deg;
         }
         if(target.transform.position == aiController.transform.position)
         {

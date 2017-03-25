@@ -61,6 +61,14 @@ public class WanderState : IEnemyState
         {
             aiController.aiManager.ReportSawPlayer(aiController);
         }
-        //TODO Wander movement
+        if (aiController.steeringArrive.enabled)
+        {
+            aiController.steeringArrive.enabled = false;
+        }
+        if (!aiController.steeringWander.enabled || !aiController.steeringSeek.enabled)
+        {
+            aiController.steeringWander.enabled = true;
+            aiController.steeringSeek.enabled = true;
+        }
     }
 }
