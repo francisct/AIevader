@@ -38,7 +38,12 @@ public class ExpandexController : MonoBehaviour {
     private void OnCollisionEnter(Collision collision)
     {
         onTop = collision.rigidbody;
-        OnActivate();
+        //OnActivate();
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        onTop = null;
     }
 
     public void OnActivate()
@@ -50,10 +55,11 @@ public class ExpandexController : MonoBehaviour {
         if (onTop) CreateImpulse(onTop);
     }
 
-    public void onDeactivte()
+    public void OnDeactivte()
     {
         startTime = Time.time;
         journeyLength = Vector3.Distance(finalScale, initialScale);
+        shrinkIntent = true;
     }
 
     private void CreateImpulse(Rigidbody onTop)
