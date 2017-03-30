@@ -6,67 +6,71 @@ public class ExpandexRemote : MonoBehaviour {
     
     [SerializeField]
     private GameObject expandexPrefab;
-    private GameObject expandexClone;
+    private GameObject deployedExpandex;
     private ExpandexController expandex;
-    private bool takeExpandex;
-    private bool hasExpandex;
+    private bool allowedToTakeExpandex;
+    
     
     // Use this for initialization
     void Start () {
-        hasExpandex = true;
+        
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+        
+	}
+
+    private void OnGUI()
+    {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (hasExpandex)
+            if (!deployedExpandex)
                 DropExpandex();
-            else if(!hasExpandex && takeExpandex)
+            else if (deployedExpandex && allowedToTakeExpandex)
                 PickupExpandex();
         }
         if (Input.GetKeyDown(KeyCode.E))
             Activate();
         if (Input.GetKeyDown(KeyCode.R))
             Deactivate();
-	}
+    }
 
     private void Activate()
     {
-        if (!hasExpandex)
+        if (deployedExpandex)
             expandex.OnActivate();
     }
 
     private void Deactivate()
     {
-        if (!hasExpandex)
+        if (deployedExpandex)
             expandex.OnDeactivte();
     }
 
     private void DropExpandex()
     {
-        expandexClone = Instantiate(expandexPrefab, new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity) as GameObject;
+        deployedExpandex = Instantiate(expandexPrefab, new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity) as GameObject;
         expandex = GameObject.Find("ScaleFromOneSide").GetComponent<ExpandexController>();
-        hasExpandex = false;
     }
 
     private void PickupExpandex()
     {
-        Destroy(expandexClone);
-        hasExpandex = true;
+        Destroy(deployedExpandex);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         GameObject obj = collision.gameObject;
         if (obj.name == "ScaleFromOneSide")
-            takeExpandex = true;
+            allowedToTakeExpandex = true;
     }
 
     private void OnCollisionExit(Collision collision)
     {
         GameObject obj = collision.gameObject;
         if (obj.name == "ScaleFromOneSide")
-            takeExpandex = false;
+            allowedToTakeExpandex = false;
     }
 }
