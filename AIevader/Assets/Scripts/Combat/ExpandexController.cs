@@ -5,18 +5,18 @@ using UnityEngine;
 public class ExpandexController : MonoBehaviour {
 
     [SerializeField]
-    private float expandedHeight;
+    private float expandedHeight = 1;
     private Vector3 initialScale;
     private Vector3 finalScale;
     [SerializeField]
-    private float expansionSpeed;
+    private float expansionSpeed = 4.4f;
     private float startTime;
     private float journeyLength;
     private bool expandIntent;
     private bool shrinkIntent;
     
     [SerializeField]
-    private float impulseForce;
+    private float impulseForce = 800;
     [SerializeField]
     private Transform parent;
 
