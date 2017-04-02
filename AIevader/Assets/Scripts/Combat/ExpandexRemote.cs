@@ -2,27 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExpandexRemote : MonoBehaviour {
-    
+public class ExpandexRemote : MonoBehaviour
+{
+
     [SerializeField]
     private GameObject expandexPrefab;
     private GameObject deployedExpandex;
     private ExpandexController expandex;
     private bool allowedToTakeExpandex;
-    
-    
+
+
     // Use this for initialization
-    void Start () {
-        
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    void Start()
+    {
 
-        
-	}
+    }
 
-    private void OnGUI()
+    // Update is called once per frame
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -35,7 +32,9 @@ public class ExpandexRemote : MonoBehaviour {
             Activate();
         if (Input.GetKeyDown(KeyCode.R))
             Deactivate();
+
     }
+
 
     private void Activate()
     {
@@ -58,6 +57,7 @@ public class ExpandexRemote : MonoBehaviour {
     private void PickupExpandex()
     {
         Destroy(deployedExpandex);
+        deployedExpandex = null;
     }
 
     private void OnCollisionEnter(Collision collision)
