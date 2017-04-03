@@ -5,19 +5,23 @@ using System.Collections.Generic;
 public class PathfindingNode : MonoBehaviour
 {
     
-    //[System.NonSerialized]
+    [System.NonSerialized]
     public int nodeID;
     private float heuristic;
-    //[System.NonSerialized]
+    [System.NonSerialized]
     public List<bool> explored = new List<bool>();
     private float distanceSoFar;
     private int heapIndex;
-    //[System.NonSerialized]
+    [System.NonSerialized]
     public List<PathfindingNode> backReference = new List<PathfindingNode>();
+    [System.NonSerialized]
     public List<PathfindingNode> neighbors = new List<PathfindingNode>();
 
+    [System.NonSerialized]
     public PathfindingNode cluster;
     //public List<GameObject> neighbors;
+    [SerializeField]
+    LayerMask wallLayer;
 
     void OnMouseOver()
     {
@@ -154,7 +158,7 @@ public class PathfindingNode : MonoBehaviour
     {
         RaycastHit hit;
         float width = GetComponent<MeshRenderer>().bounds.size.x;
-        if (Physics.SphereCast(transform.position, width, new Vector3(0,1,0), out hit, 14))
+        if (Physics.SphereCast(transform.position - transform.up * 5, width, new Vector3(0,1,0), out hit, 14, wallLayer))
         {
             if (hit.transform.tag == "Wall") Object.Destroy(gameObject);
         }
