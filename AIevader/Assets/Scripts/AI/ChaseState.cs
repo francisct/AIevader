@@ -17,7 +17,11 @@ public class ChaseState : IEnemyState
 
     public void OnTriggerEnter(Collider other)
     {
-        ;//maybe an attack range and go to attack state
+        if(other.tag == "Player")
+        {
+            ToCombatState();
+        }
+        
     }
 
     public void OnTriggerExit(Collider other)
@@ -52,11 +56,15 @@ public class ChaseState : IEnemyState
     public void UpdateState()
     {
         aiController.steeringSeek.target = chaseTarget.position;
-        aiController.steeringAlign.target = chaseTarget.rotation.y;
+        aiController.steeringAlign.target = Mathf.Atan2(aiController.steeringSeek.velocity.x, aiController.steeringSeek.velocity.z) * Mathf.Rad2Deg;
         if (aiController.steeringArrive.enabled || aiController.steeringWander.enabled)
         {
             aiController.steeringArrive.enabled = false;
             aiController.steeringWander.enabled = false;
+        }
+        if (!aiController.steeringSeek.enabled)
+        {
+            aiController.steeringSeek.enabled = true;
         }
     }
 }
