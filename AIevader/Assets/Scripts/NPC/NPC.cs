@@ -4,24 +4,29 @@ using System.Collections.Generic;
 
 public class NPC : MonoBehaviour {
 
+    [SerializeField]
     private float seekSpeed = 20.0f;
     private float relativeSpeed;
+    [System.NonSerialized]
     public Transform currentTarget;
+    [System.NonSerialized]
     public List<PathfindingNode> targetList = new List<PathfindingNode>();
+    [System.NonSerialized]
     public PathfindingNode goalNode;
+    [System.NonSerialized]
     public bool arrivedToGoal = false;
     S_Arrive s_arrive;
+    [System.NonSerialized]
     public int NPCID;
     
     private float newGoalCtr;
     private float timeBeforeNewGoal = 2f;
+    Animator anim;
+
     void Start()
     {
         NPCID = GameObject.FindGameObjectsWithTag("Pathfinder").Length-1;
-        /*foreach(GameObject node in GameObject.FindGameObjectsWithTag("Node"))
-        {
-            node.GetComponent<PathfindingNode>().explored.Add(false);
-        }*/
+        anim = GetComponent<Animator>();
         if (!OptionsController.povMode) relativeSpeed = (GameObject.Find("NodesContainer").GetComponent<Instantiator>().gridSize) / 5.0f;
         else relativeSpeed = 2f;
 
@@ -82,6 +87,7 @@ public class NPC : MonoBehaviour {
             {
                 targetList = GetComponentInParent<Pathfinding>().FindPath(goalNode, NPCID);
                 goalNode = null;
+                anim.SetBool("moving", false);
             }
 
         }
@@ -92,7 +98,8 @@ public class NPC : MonoBehaviour {
         }
         if (currentTarget != null)
         {
-            s_arrive.Move(currentTarget.position, seekSpeed * relativeSpeed);
+            anim.SetBool("moving", true);
+            s_arrive.Move(new Vector3(currentTarget.position.x, transform.position.y, currentTarget.position.z), seekSpeed * relativeSpeed);
         }
     }
 

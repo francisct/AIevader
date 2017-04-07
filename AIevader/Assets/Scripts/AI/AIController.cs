@@ -6,6 +6,7 @@ public class AIController : MonoBehaviour
     [HideInInspector]
     public IEnemyState currentState;
     public role aiRole;
+    public AIManager aiManager;
 
     public int hitPoints = 50;
 

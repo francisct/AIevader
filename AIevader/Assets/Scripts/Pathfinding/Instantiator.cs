@@ -75,7 +75,7 @@ public class Instantiator : MonoBehaviour {
     {
         GameObject[,] tempGrid = new GameObject[gridSize, gridSize];
 
-        float cubeScale = 100.0f / gridSize;
+        float cubeScale = 140.0f / gridSize;
         for (int i = 0; i < gridSize; ++i)
         {
             for (int j = 0; j < gridSize; ++j)
@@ -87,7 +87,7 @@ public class Instantiator : MonoBehaviour {
                     Quaternion.identity);
                 PathfindingNode pathfindingNode = marker.GetComponent<PathfindingNode>();
                 pathfindingNode.nodeID = (i * gridSize) + j;
-                marker.transform.localScale = new Vector3(100.0f / gridSize, 1f, 100.0f / gridSize);
+                marker.transform.localScale = new Vector3(140.0f / gridSize, 1f, 140.0f / gridSize);
                 marker.GetComponent<Renderer>().material.color =
                     new Color(Random.Range(0.8f, 1.0f),
                     Random.Range(0.8f, 1.0f),

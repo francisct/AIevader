@@ -4,9 +4,12 @@ using UnityEngine;
 public class WanderState : IEnemyState
 {
     private AIController aiController;
+    private GameObject player;
+
     public WanderState(AIController aiController)
     {
         this.aiController = aiController;
+        player = GameObject.FindGameObjectWithTag("Player");
     }
     public void OnCollisionEnter(Collision other)
     {
@@ -50,6 +53,22 @@ public class WanderState : IEnemyState
 
     public void UpdateState()
     {
-        throw new NotImplementedException();
+        var currentPos = aiController.transform.position;
+        var dir = player.transform.position - currentPos + Vector3.up*0.5f;
+        RaycastHit hit;
+        var a = Physics.Raycast(currentPos, dir, out hit);
+        if (Physics.Raycast(currentPos, dir, out hit) && hit.transform == player.transform)
+        {
+            aiController.aiManager.ReportSawPlayer(aiController);
+        }
+        if (aiController.steeringArrive.enabled)
+        {
+            aiController.steeringArrive.enabled = false;
+        }
+        if (!aiController.steeringWander.enabled || !aiController.steeringSeek.enabled)
+        {
+            aiController.steeringWander.enabled = true;
+            aiController.steeringSeek.enabled = true;
+        }
     }
 }
