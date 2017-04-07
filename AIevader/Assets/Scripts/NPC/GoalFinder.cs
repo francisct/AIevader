@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Brain : MonoBehaviour {
+public class GoalFinder : MonoBehaviour {
 
     NPC pathfinder;
     [SerializeField]
