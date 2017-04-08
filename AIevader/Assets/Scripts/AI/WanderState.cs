@@ -18,7 +18,10 @@ public class WanderState : IEnemyState
 
     public void OnTriggerEnter(Collider other)
     {
-        ToChaseState();
+        if (other.tag == "Player")
+        {
+            ToChaseState();
+        }
     }
 
     public void OnTriggerExit(Collider other)
@@ -54,12 +57,17 @@ public class WanderState : IEnemyState
     public void UpdateState()
     {
         var currentPos = aiController.transform.position;
-        var dir = player.transform.position - currentPos + Vector3.up*0.5f;
+        var dir = player.transform.position - currentPos + Vector3.up * 0.5f;
         RaycastHit hit;
         var a = Physics.Raycast(currentPos, dir, out hit);
         if (Physics.Raycast(currentPos, dir, out hit) && hit.transform == player.transform)
         {
-            aiController.aiManager.ReportSawPlayer(aiController);
+            var direction = player.transform.position - aiController.transform.position;
+            float angle = Vector3.Angle(aiController.transform.forward, direction);
+            if (Mathf.Abs(angle) < 180)
+            {
+                aiController.aiManager.ReportSawPlayer(aiController);
+            }
         }
         if (aiController.steeringArrive.enabled)
         {

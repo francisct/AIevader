@@ -15,7 +15,10 @@ public class IdleState : IEnemyState
 
     public void OnTriggerEnter(Collider other)
     {
-        ToChaseState();
+        if (other.tag == "Player")
+        {
+            ToChaseState();
+        }
     }
 
     public void OnTriggerExit(Collider other)
