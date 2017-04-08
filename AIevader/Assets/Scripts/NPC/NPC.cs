@@ -15,13 +15,14 @@ public class NPC : MonoBehaviour {
     public PathfindingNode goalNode;
     [System.NonSerialized]
     public bool arrivedToGoal = false;
-    S_Arrive s_arrive;
+    Seek seek;
     [System.NonSerialized]
     public int NPCID;
     
     private float newGoalCtr;
     private float timeBeforeNewGoal = 2f;
     Animator anim;
+
 
     void Start()
     {
@@ -30,13 +31,14 @@ public class NPC : MonoBehaviour {
         if (!OptionsController.povMode) relativeSpeed = (GameObject.Find("NodesContainer").GetComponent<Instantiator>().gridSize) / 5.0f;
         else relativeSpeed = 2f;
 
-        s_arrive = GetComponent<S_Arrive>();
+        seek = GetComponent<Seek>();
     }
 
     void Update()
     {
         if (Input.GetButtonDown("optionPov"))
         {
+            anim.SetTrigger("dead");
             Abort();
         }
         if (Instantiator.ready)
@@ -57,14 +59,7 @@ public class NPC : MonoBehaviour {
         goalNode = null;
         currentTarget = null;
     }
-
-
-    void Seek()
-    {
-            Vector3 direction = (currentTarget.transform.position - transform.position).normalized;
-            float realSpeed = seekSpeed * relativeSpeed;
-            GetComponent<Rigidbody>().AddForce((direction * realSpeed));
-    }
+    
 
     void SetNewTarget()
     {
@@ -99,7 +94,7 @@ public class NPC : MonoBehaviour {
         if (currentTarget != null)
         {
             anim.SetBool("moving", true);
-            s_arrive.Move(new Vector3(currentTarget.position.x, transform.position.y, currentTarget.position.z), seekSpeed * relativeSpeed);
+            seek.Move(new Vector3(currentTarget.position.x, transform.position.y, currentTarget.position.z), seekSpeed * relativeSpeed);
         }
     }
 
