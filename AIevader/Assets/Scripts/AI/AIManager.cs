@@ -36,7 +36,11 @@ public class AIManager : MonoBehaviour
 
     private void AssignRole(AIController ai)
     {
-        if (availableChokePoints.Count > 0)
+        if (!IsThereAnAIChasing())
+        {
+            SendAIToChase(ai);
+        }
+        else if (availableChokePoints.Count > 0)
         {
             var chokePoint = FindBestChokePoint();
             if (chokePoint)
