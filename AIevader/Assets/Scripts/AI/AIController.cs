@@ -40,7 +40,7 @@ public class AIController : MonoBehaviour
         idleState = new IdleState(this);
         arriveState = new ArriveState(this);
         combatState = new CombatState(this);
-
+        currentState = wanderState;
         steeringAlign = GetComponent<SteeringAlign>();
         steeringArrive = GetComponent<SteeringArrive>();
         steeringSeek = GetComponent<SteeringSeek>();
@@ -62,6 +62,10 @@ public class AIController : MonoBehaviour
             currentState.UpdateState();
         }
         UpdateAnimation();
+        if (hitPoints <= 0)
+        {
+            AIManager.AIKilled(this);
+        }
     }
 
     private void UpdateAnimation()

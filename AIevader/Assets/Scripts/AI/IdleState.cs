@@ -49,6 +49,6 @@ public class IdleState : IEnemyState
 
     public void UpdateState()
     {
-        ;
+        
     }
 }

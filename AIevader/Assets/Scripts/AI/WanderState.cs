@@ -18,7 +18,7 @@ public class WanderState : IEnemyState
 
     public void OnTriggerEnter(Collider other)
     {
-        
+        ToChaseState();
     }
 
     public void OnTriggerExit(Collider other)

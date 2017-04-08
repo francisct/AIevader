@@ -92,10 +92,7 @@ public class CombatState : IEnemyState
         }
         aiController.steeringSeek.target = aiController.transform.position;
 
-        if (aiController.hitPoints <= 0)
-        {
-            AIManager.AIKilled(aiController);
-        }
+        
         timeCounter += Time.deltaTime;
     }
 }

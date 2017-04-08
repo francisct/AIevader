@@ -123,7 +123,7 @@ public class AIManager : MonoBehaviour
 
     public static void AIKilled(AIController ai)
     {
-        ai.animator.SetBool("isDead", true);
+        ai.animator.SetTrigger("die");
         commandableAIs.Remove(ai);
         busyAIs.Remove(ai);
         currentAIsAlive--;
