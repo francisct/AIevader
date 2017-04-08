@@ -36,11 +36,7 @@ public class AIManager : MonoBehaviour
 
     private void AssignRole(AIController ai)
     {
-        if (!IsThereAnAIChasing())
-        {
-            SendAIToChase(ai);
-        }
-        else if(availableChokePoints.Count > 0)
+        if (availableChokePoints.Count > 0)
         {
             var chokePoint = FindBestChokePoint();
             if (chokePoint)
@@ -127,6 +123,7 @@ public class AIManager : MonoBehaviour
 
     public static void AIKilled(AIController ai)
     {
+        ai.animator.SetBool("isDead", true);
         commandableAIs.Remove(ai);
         busyAIs.Remove(ai);
         currentAIsAlive--;

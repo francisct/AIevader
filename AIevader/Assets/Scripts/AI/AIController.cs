@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class AIController : MonoBehaviour
     public IEnemyState currentState;
     public role aiRole;
     public AIManager aiManager;
-
+    public float runningAnimationTrigger = 4f;
     public int hitPoints = 50;
 
     [HideInInspector]
@@ -28,7 +29,10 @@ public class AIController : MonoBehaviour
     public SteeringSeek steeringSeek;
     [HideInInspector]
     public SteeringWander steeringWander;
-
+    [HideInInspector]
+    public Vector3 velocity;
+    [HideInInspector]
+    public Animator animator;
     void Awake()
     {
         wanderState = new WanderState(this);
@@ -41,19 +45,45 @@ public class AIController : MonoBehaviour
         steeringArrive = GetComponent<SteeringArrive>();
         steeringSeek = GetComponent<SteeringSeek>();
         steeringWander = GetComponent<SteeringWander>();
+        velocity = Vector3.zero;
     }
     // Use this for initialization
     void Start()
     {
-
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
         SelectRole();
-        currentState.UpdateState();
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("creature1Spawn"))
+        {
+            currentState.UpdateState();
+        }
+        UpdateAnimation();
     }
+
+    private void UpdateAnimation()
+    {
+        var speed = velocity.magnitude;
+        if (speed > runningAnimationTrigger)
+        {
+            animator.SetBool("isRunning", true);
+        }
+        else if (speed > 0f)
+        {
+            animator.SetBool("isWalking", true);
+            animator.SetBool("isRunning", false);
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isWalking", false);
+
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
         currentState.OnTriggerEnter(other);
