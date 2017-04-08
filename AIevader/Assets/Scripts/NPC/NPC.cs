@@ -15,7 +15,7 @@ public class NPC : MonoBehaviour {
     public PathfindingNode goalNode;
     [System.NonSerialized]
     public bool arrivedToGoal = false;
-    Seek seek;
+    Movement movement;
     [System.NonSerialized]
     public int NPCID;
     
@@ -31,7 +31,7 @@ public class NPC : MonoBehaviour {
         if (!OptionsController.povMode) relativeSpeed = (GameObject.Find("NodesContainer").GetComponent<Instantiator>().gridSize) / 5.0f;
         else relativeSpeed = 2f;
 
-        seek = GetComponent<Seek>();
+        movement = GetComponent<Movement>();
     }
 
     void Update()
@@ -94,7 +94,7 @@ public class NPC : MonoBehaviour {
         if (currentTarget != null)
         {
             anim.SetBool("moving", true);
-            seek.Move(new Vector3(currentTarget.position.x, transform.position.y, currentTarget.position.z), seekSpeed * relativeSpeed);
+            movement.Seek(new Vector3(currentTarget.position.x, transform.position.y, currentTarget.position.z), seekSpeed * relativeSpeed);
         }
     }
 

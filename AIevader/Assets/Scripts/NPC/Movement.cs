@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Seek : MonoBehaviour {
+public class Movement : MonoBehaviour {
     
     float acceleration = 2.0f;
 
@@ -13,7 +13,7 @@ public class Seek : MonoBehaviour {
         oldVelocity = rb.velocity;
     }
 
-    public void Move(Vector3 nextStep, float speed)
+    public void Seek(Vector3 nextStep, float speed)
     {
         //move is only active if there are no external forces applied
         if (!externalForceApplied())
@@ -23,6 +23,7 @@ public class Seek : MonoBehaviour {
             float clampedSpeed = Mathf.Clamp(mag * acceleration, 0.0F, speed);
             rb.velocity = (toNextStep.normalized * speed);
             oldVelocity = rb.velocity;
+            LookTowardDirection(rb.velocity);
         }
         else oldVelocity = rb.velocity;
     }
@@ -30,5 +31,16 @@ public class Seek : MonoBehaviour {
     private bool externalForceApplied()
     {
         return rb.velocity != oldVelocity;
+    }
+
+    private void LookTowardDirection(Vector3 direction)
+    {
+        Vector3 rotToward = direction.normalized;
+        if (rotToward.x != 0 || rotToward.y != 0 || rotToward.z != 0)
+        {
+            Debug.Log(rotToward);
+            Quaternion lookRotation = Quaternion.LookRotation(rotToward);
+            transform.localRotation = lookRotation;
+        }
     }
 }
