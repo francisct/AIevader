@@ -21,13 +21,18 @@ public class NPC : MonoBehaviour {
     
     private float newGoalCtr;
     private float timeBeforeNewGoal = 2f;
+    private bool dead;
     Animator anim;
+    BoxCollider boxCollider;
+    Rigidbody rigidBody;
 
 
     void Start()
     {
         NPCID = GameObject.FindGameObjectsWithTag("Pathfinder").Length-1;
         anim = GetComponent<Animator>();
+        boxCollider = GetComponent<BoxCollider>();
+        rigidBody = GetComponent<Rigidbody>();
         if (!OptionsController.povMode) relativeSpeed = (GameObject.Find("NodesContainer").GetComponent<Instantiator>().gridSize) / 5.0f;
         else relativeSpeed = 2f;
 
@@ -36,6 +41,8 @@ public class NPC : MonoBehaviour {
 
     void Update()
     {
+        if (dead)
+            Die();
         if (Input.GetButtonDown("optionPov"))
         {
             anim.SetTrigger("dead");
@@ -109,4 +116,24 @@ public class NPC : MonoBehaviour {
         targetList = new List<PathfindingNode>();
         arrivedToGoal = true;
     }
+
+    private void Die()
+    {
+        Abort();
+        anim.SetBool("dead", true);
+        rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+        boxCollider.center = new Vector3(0, 1.7f, 0);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        GameObject obj = collision.gameObject;
+        if (obj.tag == "Spikes")
+        {
+            dead = true;
+            Debug.Log("should be dying" + dead);
+        }
+            
+    }
+
 }
