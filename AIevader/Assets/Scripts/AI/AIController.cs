@@ -57,7 +57,7 @@ public class AIController : MonoBehaviour
     void Update()
     {
         SelectRole();
-        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("creature1Spawn"))
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Spawn"))
         {
             currentState.UpdateState();
         }
