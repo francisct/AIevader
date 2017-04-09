@@ -33,6 +33,7 @@ public class ArriveState : IEnemyState
 
     public void ToChaseState()
     {
+        aiController.audioSource.PlayOneShot(aiController.chaseSound);
         AIManager.FreeChokePoint(target.GetComponent<ChokePoint>());
         aiController.aiRole = AIController.role.Chase;
     }

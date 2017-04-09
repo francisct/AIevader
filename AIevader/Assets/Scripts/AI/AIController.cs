@@ -10,6 +10,12 @@ public class AIController : MonoBehaviour
     public AIManager aiManager;
     public float runningAnimationTrigger = 4f;
     public int hitPoints = 50;
+    public AudioClip spawnSound;
+    public AudioClip chaseSound;
+    public AudioClip deathSound;
+    public AudioClip combatSound1;
+    public AudioClip combatSound2;
+    public AudioClip combatSound3;
 
     [HideInInspector]
     public WanderState wanderState;
@@ -33,6 +39,9 @@ public class AIController : MonoBehaviour
     public Vector3 velocity;
     [HideInInspector]
     public Animator animator;
+    [HideInInspector]
+    public AudioSource audioSource;
+    private bool playedSpawnSound = false;
     void Awake()
     {
         wanderState = new WanderState(this);
@@ -45,6 +54,7 @@ public class AIController : MonoBehaviour
         steeringArrive = GetComponent<SteeringArrive>();
         steeringSeek = GetComponent<SteeringSeek>();
         steeringWander = GetComponent<SteeringWander>();
+        audioSource = GetComponent<AudioSource>();
         velocity = Vector3.zero;
     }
     // Use this for initialization
@@ -61,9 +71,14 @@ public class AIController : MonoBehaviour
         {
             currentState.UpdateState();
         }
+        else if (!playedSpawnSound)
+        {
+            audioSource.PlayOneShot(spawnSound);
+        }
         UpdateAnimation();
         if (hitPoints <= 0)
         {
+            audioSource.PlayOneShot(deathSound);
             AIManager.AIKilled(this);
         }
     }

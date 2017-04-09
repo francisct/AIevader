@@ -36,6 +36,7 @@ public class CombatState : IEnemyState
 
     public void ToChaseState()
     {
+        aiController.audioSource.PlayOneShot(aiController.chaseSound);
         aiController.aiRole = AIController.role.Chase;
     }
 
@@ -67,15 +68,18 @@ public class CombatState : IEnemyState
             if(rand <= 3)
             {
                 aiController.animator.SetTrigger("attack1");
+                aiController.audioSource.PlayOneShot(aiController.combatSound1);
             }
             else if (rand <= 6)
             { 
                 aiController.animator.SetTrigger("attack2");
+                aiController.audioSource.PlayOneShot(aiController.combatSound2);
 
             }
             else if (rand <= 9)
             {
                 aiController.animator.SetTrigger("attack3");
+                aiController.audioSource.PlayOneShot(aiController.combatSound3);
             }
             direction = player.transform.position - aiController.transform.position;
             distance = direction.magnitude;

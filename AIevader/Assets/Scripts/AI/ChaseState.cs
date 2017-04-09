@@ -36,7 +36,7 @@ public class ChaseState : IEnemyState
 
     public void ToChaseState()
     {
-        ;
+        aiController.audioSource.PlayOneShot(aiController.chaseSound);
     }
 
     public void ToIdleState()

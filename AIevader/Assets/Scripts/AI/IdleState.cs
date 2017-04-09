@@ -33,6 +33,7 @@ public class IdleState : IEnemyState
 
     public void ToChaseState()
     {
+        aiController.audioSource.PlayOneShot(aiController.chaseSound);
         aiController.aiRole = AIController.role.Chase;
     }
 
