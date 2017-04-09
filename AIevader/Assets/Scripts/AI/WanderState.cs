@@ -59,12 +59,11 @@ public class WanderState : IEnemyState
         var currentPos = aiController.transform.position;
         var dir = player.transform.position - currentPos + Vector3.up * 0.5f;
         RaycastHit hit;
-        var a = Physics.Raycast(currentPos, dir, out hit);
         if (Physics.Raycast(currentPos, dir, out hit) && hit.transform == player.transform)
         {
             var direction = player.transform.position - aiController.transform.position;
             float angle = Vector3.Angle(aiController.transform.forward, direction);
-            if (Mathf.Abs(angle) < 180)
+            if (Mathf.Abs(angle) < 75)
             {
                 aiController.aiManager.ReportSawPlayer(aiController);
             }

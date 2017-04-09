@@ -16,7 +16,7 @@ public class SteeringSeek : MonoBehaviour
     void Update()
     {
         Vector3 linear = target - transform.position;
-        if (linear.magnitude == 0)
+        if (linear.magnitude <= 0.01f)
         {
             aiController.velocity = Vector3.zero;
             return;
