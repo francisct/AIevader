@@ -42,6 +42,8 @@ public class AIController : MonoBehaviour
     [HideInInspector]
     public AudioSource audioSource;
     private bool playedSpawnSound = false;
+    private float distToGround;
+    private CapsuleCollider capsuleCollider;
     void Awake()
     {
         wanderState = new WanderState(this);
@@ -55,18 +57,40 @@ public class AIController : MonoBehaviour
         steeringSeek = GetComponent<SteeringSeek>();
         steeringWander = GetComponent<SteeringWander>();
         audioSource = GetComponent<AudioSource>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
         velocity = Vector3.zero;
     }
     // Use this for initialization
     void Start()
     {
         animator = GetComponent<Animator>();
+        distToGround = capsuleCollider.center.y;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (hitPoints <= 0)
+        {
+            audioSource.PlayOneShot(deathSound);
+            AIManager.AIKilled(this);
+        }
         SelectRole();
+        if (!IsGrounded())
+        {
+            animator.SetBool("isInAir", true);
+            DisableMovement();
+            return;
+        }
+        else
+        {
+            animator.SetBool("isInAir", false);
+            if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Land"))
+            {
+                return;
+            }
+            EnableMovement();
+        }
         if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Spawn"))
         {
             currentState.UpdateState();
@@ -74,13 +98,11 @@ public class AIController : MonoBehaviour
         else if (!playedSpawnSound)
         {
             audioSource.PlayOneShot(spawnSound);
+            playedSpawnSound = true;
         }
+        
         UpdateAnimation();
-        if (hitPoints <= 0)
-        {
-            audioSource.PlayOneShot(deathSound);
-            AIManager.AIKilled(this);
-        }
+       
     }
 
     private void UpdateAnimation()
@@ -137,6 +159,27 @@ public class AIController : MonoBehaviour
         {
             currentState = combatState;
         }
+    }
+
+    private bool IsGrounded()
+    {
+        var colliderPosition = transform.position + capsuleCollider.center;
+        bool a = Physics.Raycast(colliderPosition, -Vector3.up, distToGround + 0.2f);
+        return a;
+    }
+    private void DisableMovement()
+    {
+        steeringAlign.enabled = false;
+        steeringArrive.enabled = false;
+        steeringSeek.enabled = false;
+        steeringWander.enabled = false;
+    }
+    private void EnableMovement()
+    {
+        steeringAlign.enabled = true;
+        steeringArrive.enabled = true;
+        steeringSeek.enabled = true;
+        steeringWander.enabled = true;
     }
         
 }

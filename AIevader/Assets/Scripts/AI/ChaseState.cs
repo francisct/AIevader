@@ -56,6 +56,7 @@ public class ChaseState : IEnemyState
     public void UpdateState()
     {
         aiController.steeringSeek.target = chaseTarget.position;
+        aiController.steeringSeek.target.y = 0;
         aiController.steeringAlign.target = Mathf.Atan2(aiController.steeringSeek.velocity.x, aiController.steeringSeek.velocity.z) * Mathf.Rad2Deg;
         if (aiController.steeringArrive.enabled || aiController.steeringWander.enabled)
         {
