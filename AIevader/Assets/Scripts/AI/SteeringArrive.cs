@@ -9,16 +9,22 @@ public class SteeringArrive : MonoBehaviour
     public float targetRadius = 0.1f;
     public float slowRadius = 5.0f;
     public float timeToTarget = 0.1f;
+    private AIController aiController;
     void Start()
     {
         target = transform.position;
+        aiController = GetComponent<AIController>();
     }
 
     void Update()
     {
         Vector3 direction = target - transform.position;
         float distance = direction.magnitude;
-        if (distance < targetRadius) return;
+        if (distance < targetRadius)
+        {
+            aiController.velocity = Vector3.zero;
+            return;
+        };
         float targetSpeed = 0;
         if (distance > slowRadius) targetSpeed = maxSpeed;
         else targetSpeed = maxSpeed * distance / slowRadius;
@@ -40,5 +46,6 @@ public class SteeringArrive : MonoBehaviour
             velocity.Normalize();
             velocity *= maxSpeed;
         }
+        aiController.velocity = velocity;
     }
 }
