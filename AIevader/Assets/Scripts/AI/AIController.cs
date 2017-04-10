@@ -44,6 +44,9 @@ public class AIController : MonoBehaviour
     private bool playedSpawnSound = false;
     private float distToGround;
     private CapsuleCollider capsuleCollider;
+    private float jumpRecoveryTime;
+    private float jumpRecoveryCounter;
+    private bool wasInAir;
     void Awake()
     {
         wanderState = new WanderState(this);
@@ -59,6 +62,9 @@ public class AIController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         velocity = Vector3.zero;
+        jumpRecoveryTime = 0.4f;
+        wasInAir = false;
+
     }
     // Use this for initialization
     void Start()
@@ -78,6 +84,8 @@ public class AIController : MonoBehaviour
         SelectRole();
         if (!IsGrounded())
         {
+            jumpRecoveryCounter = 0f;
+            wasInAir = true;
             animator.SetBool("isInAir", true);
             DisableMovement();
             return;
@@ -85,11 +93,13 @@ public class AIController : MonoBehaviour
         else
         {
             animator.SetBool("isInAir", false);
-            if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Land"))
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Land") && jumpRecoveryCounter >= jumpRecoveryTime && wasInAir)
             {
-                return;
+                currentState.EnableMovement();
+                wasInAir = false;
+                jumpRecoveryCounter = 0f;
             }
-            currentState.EnableMovement();
+            
         }
         
         if (!playedSpawnSound && animator.GetCurrentAnimatorStateInfo(0).IsTag("Roar"))
@@ -97,13 +107,13 @@ public class AIController : MonoBehaviour
             audioSource.PlayOneShot(spawnSound);
             playedSpawnSound = true;
         }
-        else if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Spawn") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Roar"))
+        else if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Spawn") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Roar") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Land") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Air"))
         {
             currentState.UpdateState();
         }
 
         UpdateAnimation();
-       
+        jumpRecoveryCounter += Time.deltaTime;
     }
 
     private void UpdateAnimation()
@@ -165,12 +175,12 @@ public class AIController : MonoBehaviour
     private bool IsGrounded()
     {
         var colliderPosition = transform.position + capsuleCollider.center;
-        bool a = Physics.Raycast(colliderPosition, -Vector3.up, distToGround + 0.2f);
+        bool a = Physics.Raycast(colliderPosition, -Vector3.up, distToGround + 0.1f);
         return a;
     }
     private void DisableMovement()
-    {
-        steeringAlign.enabled = false;
+    {       
+        velocity = Vector3.zero;
         steeringArrive.enabled = false;
         steeringSeek.enabled = false;
         steeringWander.enabled = false;
