@@ -75,8 +75,12 @@ public class WanderState : IEnemyState
         }
         if (!aiController.steeringWander.enabled || !aiController.steeringSeek.enabled)
         {
-            aiController.steeringWander.enabled = true;
-            aiController.steeringSeek.enabled = true;
+            EnableMovement();
         }
+    }
+    public void EnableMovement()
+    {
+        aiController.steeringWander.enabled = true;
+        aiController.steeringSeek.enabled = true;
     }
 }

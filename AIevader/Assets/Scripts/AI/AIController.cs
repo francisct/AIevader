@@ -89,18 +89,19 @@ public class AIController : MonoBehaviour
             {
                 return;
             }
-            EnableMovement();
+            currentState.EnableMovement();
         }
-        if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Spawn"))
-        {
-            currentState.UpdateState();
-        }
-        else if (!playedSpawnSound)
+        
+        if (!playedSpawnSound && animator.GetCurrentAnimatorStateInfo(0).IsTag("Roar"))
         {
             audioSource.PlayOneShot(spawnSound);
             playedSpawnSound = true;
         }
-        
+        else if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Spawn") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Roar"))
+        {
+            currentState.UpdateState();
+        }
+
         UpdateAnimation();
        
     }
@@ -173,13 +174,6 @@ public class AIController : MonoBehaviour
         steeringArrive.enabled = false;
         steeringSeek.enabled = false;
         steeringWander.enabled = false;
-    }
-    private void EnableMovement()
-    {
-        steeringAlign.enabled = true;
-        steeringArrive.enabled = true;
-        steeringSeek.enabled = true;
-        steeringWander.enabled = true;
     }
         
 }

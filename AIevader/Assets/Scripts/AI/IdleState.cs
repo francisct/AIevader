@@ -55,4 +55,8 @@ public class IdleState : IEnemyState
     {
         
     }
+    public void EnableMovement()
+    {
+        return;
+    }
 }

@@ -65,7 +65,11 @@ public class ChaseState : IEnemyState
         }
         if (!aiController.steeringSeek.enabled)
         {
-            aiController.steeringSeek.enabled = true;
+            EnableMovement();
         }
+    }
+    public void EnableMovement()
+    {
+        aiController.steeringSeek.enabled = true;
     }
 }

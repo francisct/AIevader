@@ -75,4 +75,8 @@ public class ArriveState : IEnemyState
             ToIdleState();
         }
     }
+    public void EnableMovement()
+    {
+        aiController.steeringArrive.enabled = true;
+    }
 }

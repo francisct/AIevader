@@ -99,4 +99,8 @@ public class CombatState : IEnemyState
         
         timeCounter += Time.deltaTime;
     }
+    public void EnableMovement()
+    {
+        return;
+    }
 }
