@@ -33,6 +33,7 @@ public class ArriveState : IEnemyState
 
     public void ToChaseState()
     {
+        aiController.audioSource.PlayOneShot(aiController.chaseSound);
         AIManager.FreeChokePoint(target.GetComponent<ChokePoint>());
         aiController.aiRole = AIController.role.Chase;
     }
@@ -69,9 +70,13 @@ public class ArriveState : IEnemyState
             aiController.steeringArrive.target = target.transform.position;
             aiController.steeringAlign.target = Mathf.Atan2(aiController.steeringArrive.velocity.x, aiController.steeringArrive.velocity.z) * Mathf.Rad2Deg;
         }
-        if(target.transform.position == aiController.transform.position)
+        if(Mathf.Abs((target.transform.position - aiController.transform.position).magnitude) < aiController.steeringAlign.targetRadius)
         {
             ToIdleState();
         }
+    }
+    public void EnableMovement()
+    {
+        aiController.steeringArrive.enabled = true;
     }
 }

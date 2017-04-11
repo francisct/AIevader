@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class AIManager : MonoBehaviour
 {
-    public AIController[] allAIs;
-    public ChokePoint[] chokePoints;
+    public GameObject chokePoints;
     private static List<ChokePoint> availableChokePoints = new List<ChokePoint>();
     private static List<ChokePoint> occupiedChokePoints = new List<ChokePoint>();
     private static List<AIController> commandableAIs = new List<AIController>();
@@ -30,8 +29,14 @@ public class AIManager : MonoBehaviour
     }
     private void InitializeLists()
     {
-        commandableAIs.AddRange(allAIs);
-        availableChokePoints.AddRange(chokePoints);
+        foreach(Transform t in transform)
+        {
+            commandableAIs.Add(t.GetComponent<AIController>());
+        }
+        foreach(Transform t in chokePoints.transform)
+        {
+            availableChokePoints.Add(t.GetComponent<ChokePoint>());
+        }
     }
 
     private void AssignRole(AIController ai)
@@ -40,7 +45,7 @@ public class AIManager : MonoBehaviour
         {
             SendAIToChase(ai);
         }
-        else if(availableChokePoints.Count > 0)
+        else if (availableChokePoints.Count > 0)
         {
             var chokePoint = FindBestChokePoint();
             if (chokePoint)
@@ -127,6 +132,7 @@ public class AIManager : MonoBehaviour
 
     public static void AIKilled(AIController ai)
     {
+        ai.animator.SetTrigger("die");
         commandableAIs.Remove(ai);
         busyAIs.Remove(ai);
         currentAIsAlive--;
@@ -135,7 +141,7 @@ public class AIManager : MonoBehaviour
     private void SendAIToChase(AIController ai)
     {
         OccupiedAI(ai);
-        ai.aiRole = AIController.role.Chase;
+        ai.currentState.ToChaseState();
     }
 
     private void SendAIToWander(AIController ai)

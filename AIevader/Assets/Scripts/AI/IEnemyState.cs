@@ -41,4 +41,6 @@ public interface IEnemyState
     /// Transition to Combat state
     /// </summary>
     void ToCombatState();
+
+    void EnableMovement();
 }

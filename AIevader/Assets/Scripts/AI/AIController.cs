@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
@@ -7,8 +8,14 @@ public class AIController : MonoBehaviour
     public IEnemyState currentState;
     public role aiRole;
     public AIManager aiManager;
-
+    public float runningAnimationTrigger = 4f;
     public int hitPoints = 50;
+    public AudioClip spawnSound;
+    public AudioClip chaseSound;
+    public AudioClip deathSound;
+    public AudioClip combatSound1;
+    public AudioClip combatSound2;
+    public AudioClip combatSound3;
 
     [HideInInspector]
     public WanderState wanderState;
@@ -28,7 +35,18 @@ public class AIController : MonoBehaviour
     public SteeringSeek steeringSeek;
     [HideInInspector]
     public SteeringWander steeringWander;
-
+    [HideInInspector]
+    public Vector3 velocity;
+    [HideInInspector]
+    public Animator animator;
+    [HideInInspector]
+    public AudioSource audioSource;
+    private bool playedSpawnSound = false;
+    private float distToGround;
+    private CapsuleCollider capsuleCollider;
+    private float jumpRecoveryTime;
+    private float jumpRecoveryCounter;
+    private bool wasInAir;
     void Awake()
     {
         wanderState = new WanderState(this);
@@ -36,24 +54,88 @@ public class AIController : MonoBehaviour
         idleState = new IdleState(this);
         arriveState = new ArriveState(this);
         combatState = new CombatState(this);
-
+        currentState = wanderState;
         steeringAlign = GetComponent<SteeringAlign>();
         steeringArrive = GetComponent<SteeringArrive>();
         steeringSeek = GetComponent<SteeringSeek>();
         steeringWander = GetComponent<SteeringWander>();
+        audioSource = GetComponent<AudioSource>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
+        velocity = Vector3.zero;
+        jumpRecoveryTime = 0.4f;
+        wasInAir = false;
+
     }
     // Use this for initialization
     void Start()
     {
-
+        animator = GetComponent<Animator>();
+        distToGround = capsuleCollider.center.y;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (hitPoints <= 0)
+        {
+            audioSource.PlayOneShot(deathSound);
+            AIManager.AIKilled(this);
+        }
         SelectRole();
-        currentState.UpdateState();
+        if (!IsGrounded())
+        {
+            jumpRecoveryCounter = 0f;
+            wasInAir = true;
+            animator.SetBool("isInAir", true);
+            DisableMovement();
+            return;
+        }
+        else
+        {
+            animator.SetBool("isInAir", false);
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Land") && jumpRecoveryCounter >= jumpRecoveryTime && wasInAir)
+            {
+                currentState.EnableMovement();
+                wasInAir = false;
+                jumpRecoveryCounter = 0f;
+            }
+            
+        }
+        
+        if (!playedSpawnSound && animator.GetCurrentAnimatorStateInfo(0).IsTag("Roar"))
+        {
+            audioSource.PlayOneShot(spawnSound);
+            playedSpawnSound = true;
+        }
+        else if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Spawn") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Roar") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Land") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Air"))
+        {
+            currentState.UpdateState();
+        }
+
+        UpdateAnimation();
+        jumpRecoveryCounter += Time.deltaTime;
     }
+
+    private void UpdateAnimation()
+    {
+        var speed = velocity.magnitude;
+        if (speed > runningAnimationTrigger)
+        {
+            animator.SetBool("isRunning", true);
+        }
+        else if (speed > 0f)
+        {
+            animator.SetBool("isWalking", true);
+            animator.SetBool("isRunning", false);
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isWalking", false);
+
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
         currentState.OnTriggerEnter(other);
@@ -88,6 +170,20 @@ public class AIController : MonoBehaviour
         {
             currentState = combatState;
         }
+    }
+
+    private bool IsGrounded()
+    {
+        var colliderPosition = transform.position + capsuleCollider.center;
+        bool a = Physics.Raycast(colliderPosition, -Vector3.up, distToGround + 0.1f);
+        return a;
+    }
+    private void DisableMovement()
+    {       
+        velocity = Vector3.zero;
+        steeringArrive.enabled = false;
+        steeringSeek.enabled = false;
+        steeringWander.enabled = false;
     }
         
 }
