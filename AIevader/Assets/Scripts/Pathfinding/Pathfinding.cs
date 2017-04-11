@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 public class Pathfinding : MonoBehaviour {
 
-   
+    [Header("Remeber to set the tab to pathfinder and add a rigidbody!")]
     NodeBinaryHeap openHeap;
     PathfindingNode startNode;
     PathfindingNode bestSoFar;

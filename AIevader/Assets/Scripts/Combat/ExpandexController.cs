@@ -20,6 +20,8 @@ public class ExpandexController : MonoBehaviour {
     [SerializeField]
     private Transform parent;
 
+    private bool expanded;
+
     Rigidbody onTop;
 
     // Use this for initialization
@@ -46,8 +48,16 @@ public class ExpandexController : MonoBehaviour {
         onTop = null;
     }
 
-    public void OnActivate()
+    public void ToggleActivation()
     {
+        if (expanded) Deactivate();
+        else Activate();
+    }
+
+    public void Activate()
+    {
+        shrinkIntent = false;
+        expanded = true;
         startTime = Time.time;
         journeyLength = Vector3.Distance(initialScale, finalScale);
         expandIntent = true;
@@ -55,8 +65,10 @@ public class ExpandexController : MonoBehaviour {
         if (onTop) CreateImpulse(onTop);
     }
 
-    public void OnDeactivte()
+    public void Deactivate()
     {
+        expandIntent = false;
+        expanded = false;
         startTime = Time.time;
         journeyLength = Vector3.Distance(finalScale, initialScale);
         shrinkIntent = true;
@@ -64,11 +76,12 @@ public class ExpandexController : MonoBehaviour {
 
     private void CreateImpulse(Rigidbody onTop)
     {
-        onTop.AddForce(new Vector3(0, 1, 0) * impulseForce, ForceMode.Impulse);
+        onTop.AddForce(transform.up * impulseForce + Vector3.up * 50, ForceMode.Impulse);
     }
 
     private void Expand()
     {
+        
         float distCovered = (Time.time - startTime) * expansionSpeed;
         float fracJourney = distCovered / journeyLength;
         parent.localScale = Vector3.Lerp(initialScale, finalScale, fracJourney);

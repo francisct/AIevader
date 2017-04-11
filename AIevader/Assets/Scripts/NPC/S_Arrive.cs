@@ -16,6 +16,6 @@ public class S_Arrive : MonoBehaviour {
         Vector3 toNextStep = nextStep - transform.position;
         float mag = toNextStep.magnitude;
         float clampedSpeed = Mathf.Clamp(mag * acceleration, 0.0F, speed);
-        rb.velocity = (toNextStep.normalized * clampedSpeed);
+        rb.velocity = (toNextStep.normalized * speed);
     }
 }

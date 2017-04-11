@@ -2,62 +2,68 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExpandexRemote : MonoBehaviour {
-    
+public class ExpandexRemote : MonoBehaviour
+{
+
     [SerializeField]
     private GameObject expandexPrefab;
     private GameObject deployedExpandex;
     private ExpandexController expandex;
     private bool allowedToTakeExpandex;
-    
-    
+    [SerializeField]
+    private Transform camera;
+    [SerializeField]
+    private float maxDistanceToStick;
+    [SerializeField]
+    LayerMask stickableSurface;
     // Use this for initialization
-    void Start () {
-        
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    void Start()
+    {
 
-        
-	}
+    }
 
-    private void OnGUI()
+    // Update is called once per frame
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
             if (!deployedExpandex)
-                DropExpandex();
+                StickExpandex();
             else if (deployedExpandex && allowedToTakeExpandex)
                 PickupExpandex();
         }
-        if (Input.GetKeyDown(KeyCode.E))
-            Activate();
-        if (Input.GetKeyDown(KeyCode.R))
-            Deactivate();
+        else if (Input.GetKeyDown(KeyCode.E))
+            ToggleExpandexActivation();
+
     }
 
-    private void Activate()
+
+    private void ToggleExpandexActivation()
     {
         if (deployedExpandex)
-            expandex.OnActivate();
+            expandex.ToggleActivation();
     }
+    
 
-    private void Deactivate()
+    private void StickExpandex()
     {
-        if (deployedExpandex)
-            expandex.OnDeactivte();
-    }
+        RaycastHit hit;
+        if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistanceToStick, stickableSurface))
+        {
+            Vector3 position = hit.point;
 
-    private void DropExpandex()
-    {
-        deployedExpandex = Instantiate(expandexPrefab, new Vector3(transform.position.x, 0.5f, transform.position.z), Quaternion.identity) as GameObject;
-        expandex = GameObject.Find("ScaleFromOneSide").GetComponent<ExpandexController>();
+            deployedExpandex = Instantiate(expandexPrefab, position, Quaternion.identity) as GameObject;
+            deployedExpandex.transform.up = hit.normal;
+            expandex = GameObject.Find("ScaleFromOneSide").GetComponent<ExpandexController>();
+        }
     }
+    
 
     private void PickupExpandex()
     {
         Destroy(deployedExpandex);
+        deployedExpandex = null;
+        allowedToTakeExpandex = false;
     }
 
     private void OnCollisionEnter(Collision collision)
