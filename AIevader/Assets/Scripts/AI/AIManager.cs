@@ -13,6 +13,14 @@ public class AIManager : MonoBehaviour
     private static GameObject player;
     private static int currentAIsAlive;
 
+    void Awake()
+    {
+        foreach(Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+    }
+
     // Use this for initialization
     void Start()
     {
