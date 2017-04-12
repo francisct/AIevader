@@ -8,12 +8,11 @@ public class HealthController : MonoBehaviour {
     private int health;
     private int initialHealth;
     private GUIBarScript healthBar;
-    private GuiController gui;
+    public GuiController gui;
 	// Use this for initialization
 	void Start () {
         initialHealth = health;
         healthBar = GameObject.Find("HealthBar").GetComponent<GUIBarScript>();
-        gui = GameObject.Find("Canvas").GetComponent<GuiController>();
 	}
 	
 	// Update is called once per frame

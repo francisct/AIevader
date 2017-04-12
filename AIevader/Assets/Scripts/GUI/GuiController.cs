@@ -1,23 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GuiController : MonoBehaviour {
+public class GuiController : MonoBehaviour
+{
 
-    // Use this for initialization
-    Text gameOver;
-	void Start () {
-        gameOver = GameObject.Find("GameOverText").GetComponent<Text>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public GameObject gameOverPanel; 
 
     public void GameOver()
     {
-        gameOver.text = "Game Over!";
+        Time.timeScale = 0;
+        gameOverPanel.SetActive(true);
+    }
+
+    public void PlayAgain()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene("LevelDesign");
     }
 }
