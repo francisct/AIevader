@@ -173,7 +173,7 @@ public class AIManager : MonoBehaviour
         chokePointAIs[target] = ai;
         OccupiedChokePoint(target);
         ai.aiRole = AIController.role.Arrive;
-        ai.arriveState.target = target;
+        ai.arriveState.SendAIToNewChokePoint(target);
     }
 
     private void SendAIToCombat(AIController ai)

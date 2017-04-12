@@ -18,17 +18,12 @@ public class AStar : MonoBehaviour
         aiController = GetComponent<AIController>();
     }
 
-    void Update()
-    {
-        FindPath(seeker.position, target.position);
-    }
-
     /// <summary>
     /// Find shortest path between start position and target position
     /// </summary>
     /// <param name="startPos"></param>
     /// <param name="targetPos"></param>
-    void FindPath(Vector3 startPos, Vector3 targetPos)
+    public void FindPath(Vector3 startPos, Vector3 targetPos)
     {
 
         Node startNode = grid.NodeFromWorldPoint(startPos);

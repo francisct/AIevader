@@ -98,4 +98,24 @@ public class Grid : MonoBehaviour
         int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
         return grid[x, y];
     }
+    void OnDrawGizmos()
+    {
+        var a = GameObject.FindObjectOfType<AIController>();
+        Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
+        if (grid != null)
+        {
+            foreach (Node n in grid)
+            {
+                Gizmos.color = n.isWalkable ? Color.white : Color.red;
+                if (a.path != null)
+                {
+                    if (a.path.Contains(n))
+                    {
+                        Gizmos.color = Color.black;
+                    }
+                }
+                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - 0.1f));
+            }
+        }
+    }
 }
