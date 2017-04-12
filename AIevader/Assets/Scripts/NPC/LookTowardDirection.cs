@@ -19,7 +19,7 @@ public class LookTowardDirection : MonoBehaviour {
         Vector3 rotToward = direction.normalized;
         if (rotToward.x != 0 || rotToward.y != 0 || rotToward.z != 0)
         {
-            Debug.Log(rotToward);
+            //Debug.Log(rotToward);
             Quaternion lookRotation = Quaternion.LookRotation(rotToward);
             transform.localRotation = lookRotation;
         }

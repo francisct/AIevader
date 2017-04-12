@@ -14,7 +14,7 @@ public class AStar : MonoBehaviour
 
     void Awake()
     {
-        grid = GetComponent<Grid>();
+        grid = GameObject.Find("Floor").GetComponent<Grid>();
     }
 
     void Update()
@@ -34,7 +34,7 @@ public class AStar : MonoBehaviour
         Node targetNode = grid.NodeFromWorldPoint(targetPos);
 
         List<Node> openSet = new List<Node>();
-        HashSet<Node> closedSet = new HashSet<Node>();
+        List<Node> closedSet = new List<Node>();
 
 
         openSet.Add(startNode);
