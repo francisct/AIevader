@@ -140,7 +140,7 @@ public class ArriveState : IEnemyState
     }
     public void SendAIToNewChokePoint(ChokePoint target) {
         this.target = target;
-        aiController.aStar.FindPath(aiController.transform.position, target.transform.position);
+        PathRequestManager.RequestPath(new PathRequest(aiController.transform.position, target.transform.position, aiController.unit.OnPathFound));
     }
     void AdjustAlignment()
     {

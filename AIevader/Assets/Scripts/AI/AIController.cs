@@ -52,6 +52,8 @@ public class AIController : MonoBehaviour
     public List<Node> path = new List<Node>();
     [HideInInspector]
     public AStar aStar;
+    [HideInInspector]
+    public Unit unit;
 
     void Awake()
     {
@@ -68,6 +70,7 @@ public class AIController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         aStar = GetComponent<AStar>();
+        unit = GetComponent<Unit>();
         velocity = Vector3.zero;
         jumpRecoveryTime = 0.4f;
         wasInAir = false;

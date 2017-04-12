@@ -83,7 +83,7 @@ public class ChaseState : IEnemyState
         {
             return;
         }
-        aiController.aStar.FindPath(aiController.transform.position, chaseTarget.transform.position);
+        PathRequestManager.RequestPath(new PathRequest(aiController.transform.position, chaseTarget.transform.position, aiController.unit.OnPathFound));
         if (aiController.path.Count > 0 && (aiController.transform.position - aiController.path[0].worldPosition).magnitude < 0.5f)
         {
             aiController.path.RemoveAt(0);
