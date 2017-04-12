@@ -11,10 +11,11 @@ public class AStar : MonoBehaviour
     Grid grid;
     public Transform seeker, target;
     public int heuristicSelection; // {"djikstra" , "A*"}
-
+    private AIController aiController;
     void Awake()
     {
         grid = GameObject.Find("Floor").GetComponent<Grid>();
+        aiController = GetComponent<AIController>();
     }
 
     void Update()
@@ -103,7 +104,7 @@ public class AStar : MonoBehaviour
 
         path.Reverse();
 
-        grid.path = path;
+        aiController.path = path;
     }
 
     // Euclidean Distance

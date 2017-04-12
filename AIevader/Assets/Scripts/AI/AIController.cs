@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AIController : MonoBehaviour
@@ -47,6 +48,9 @@ public class AIController : MonoBehaviour
     private float jumpRecoveryTime;
     private float jumpRecoveryCounter;
     private bool wasInAir;
+    [HideInInspector]
+    public List<Node> path;
+
     void Awake()
     {
         wanderState = new WanderState(this);
