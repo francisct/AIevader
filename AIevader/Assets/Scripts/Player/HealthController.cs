@@ -19,10 +19,17 @@ public class HealthController : MonoBehaviour {
 		
 	}
 
-    bool TakeDamage(int damage)
+    public bool TakeDamage(float damage)
     {
-        health -= damage;
+        health -= (int)damage;
         healthBar.Value = health / initialHealth;
         return health <= 0;
+    }
+
+    public void RestoreHealth(int restored)
+    {
+        if (health + restored <= initialHealth)
+            health += restored;
+        else health = initialHealth;
     }
 }
