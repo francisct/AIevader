@@ -12,10 +12,16 @@ public class AStar : MonoBehaviour
     public Transform seeker, target;
     public int heuristicSelection; // {"djikstra" , "A*"}
     private AIController aiController;
+
     void Awake()
     {
         grid = GameObject.Find("Floor").GetComponent<Grid>();
         aiController = GetComponent<AIController>();
+    }
+
+    void Update()
+    {
+        FindPath(seeker.position, target.position);
     }
 
     /// <summary>
