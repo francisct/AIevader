@@ -21,7 +21,7 @@ public class AStar : MonoBehaviour
 
     void Update()
     {
-        FindPath(seeker.position, target.position);
+        //FindPath(seeker.position, target.position);
     }
 
     /// <summary>

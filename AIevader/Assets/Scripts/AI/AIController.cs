@@ -49,7 +49,7 @@ public class AIController : MonoBehaviour
     private float jumpRecoveryCounter;
     private bool wasInAir;
     [HideInInspector]
-    public List<Node> path;
+    public List<Node> path = new List<Node>();
     [HideInInspector]
     public AStar aStar;
 
@@ -134,7 +134,7 @@ public class AIController : MonoBehaviour
     private void UpdateAnimation()
     {
         var speed = velocity.magnitude;
-        if (speed > runningAnimationTrigger)
+        if (speed >= runningAnimationTrigger)
         {
             animator.SetBool("isRunning", true);
         }

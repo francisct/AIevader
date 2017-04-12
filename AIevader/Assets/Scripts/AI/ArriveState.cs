@@ -72,13 +72,19 @@ public class ArriveState : IEnemyState
 
     public void UpdateState()
     {
-        if(target == null)
+        if(target == null || aiController.path == null)
         {
             return;
         }
-        if ((aiController.transform.position - aiController.path[0].worldPosition).magnitude < 0.5f)
+        
+        if (aiController.path.Count > 1 && (aiController.transform.position - aiController.path[0].worldPosition).magnitude < 0.5f)
         {
             aiController.path.RemoveAt(0);
+        }
+        else if (aiController.path.Count == 1 && Mathf.Abs((aiController.transform.position - aiController.path[0].worldPosition).magnitude) <= aiController.steeringArrive.targetRadius)
+        {
+            aiController.path.RemoveAt(0);
+            ToIdleState();
         }
         if (aiController.path.Count <= 1)
         {
@@ -104,14 +110,10 @@ public class ArriveState : IEnemyState
                 aiController.steeringSeek.enabled = true;
             }
         }
-        if (target != null && aiController.path != null)
+        if (target != null && aiController.path != null && aiController.path.Count > 0)
         {
             SetPathTarget(aiController.path[0].worldPosition);
             AdjustAlignment();
-        }
-        if(Mathf.Abs((target.transform.position - aiController.transform.position).magnitude) < aiController.steeringAlign.targetRadius)
-        {
-            ToIdleState();
         }
     }
     public void EnableMovement()
