@@ -5,11 +5,50 @@ namespace Invector.CharacterController
 {
     public class vThirdPersonController : vThirdPersonAnimator
     {
+        private float initialWalkSpeed;
+        private float initialRunningSpeed;
+        private float initialSprintSpeed;
+        private float initialJumpForward;
+
+        public bool isSpeedBoosted { get; set; }
+        private bool timerStarted;
+
+        [SerializeField]
+        private float speedBoostTimer;
+
         protected virtual void Start()
         {
+            initialWalkSpeed = freeWalkSpeed;
+            initialRunningSpeed = freeRunningSpeed;
+            initialSprintSpeed = freeSprintSpeed;
+            initialJumpForward = jumpForward;
+
 #if !UNITY_EDITOR
                 Cursor.visible = false;
 #endif
+        }
+
+        void Update()
+        {
+            if (isSpeedBoosted)
+            {
+                float timeBoosted = 0.0f;
+                if (!timerStarted)
+                {
+                    timeBoosted = Time.time;
+                    timerStarted = true;
+                }
+
+                if (Time.time - timeBoosted >= speedBoostTimer)
+                {
+                    freeWalkSpeed = initialWalkSpeed;
+                    freeRunningSpeed = initialRunningSpeed;
+                    freeSprintSpeed = initialSprintSpeed;
+                    jumpForward = initialJumpForward;
+                    isSpeedBoosted = false;
+                    timerStarted = false;
+                }
+            }
         }
 
         public virtual void Sprint(bool value)

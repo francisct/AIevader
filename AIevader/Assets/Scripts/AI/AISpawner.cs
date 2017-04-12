@@ -20,6 +20,7 @@ public class AISpawner : MonoBehaviour {
     {
         if (other.tag == "Player")
         {
+            if (ai)
             ai.SetActive(true);
         }
     }
