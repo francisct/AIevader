@@ -8,10 +8,12 @@ public class HealthController : MonoBehaviour {
     private int health;
     private int initialHealth;
     private GUIBarScript healthBar;
+    private GuiController gui;
 	// Use this for initialization
 	void Start () {
         initialHealth = health;
         healthBar = GameObject.Find("HealthBar").GetComponent<GUIBarScript>();
+        gui = GameObject.Find("Canvas").GetComponent<GuiController>();
 	}
 	
 	// Update is called once per frame
@@ -19,11 +21,11 @@ public class HealthController : MonoBehaviour {
 		
 	}
 
-    public bool TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         health -= (int)damage;
         healthBar.Value = health / initialHealth;
-        return health <= 0;
+        if (health <= 0) gui.GameOver();
     }
 
     public void RestoreHealth(int restored)
