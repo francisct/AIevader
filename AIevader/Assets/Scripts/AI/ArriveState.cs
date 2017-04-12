@@ -35,7 +35,7 @@ public class ArriveState : IEnemyState
     {
         if (aiController.path != null)
         {
-            aiController.path.Clear();
+            aiController.path = null;
         }
         aiController.audioSource.PlayOneShot(aiController.chaseSound);
         AIManager.FreeChokePoint(target.GetComponent<ChokePoint>());
@@ -46,7 +46,7 @@ public class ArriveState : IEnemyState
     {
         if (aiController.path != null)
         {
-            aiController.path.Clear();
+            aiController.path = null;
         }
         aiController.aiRole = AIController.role.Idle;
     }
@@ -55,7 +55,7 @@ public class ArriveState : IEnemyState
     {
         if (aiController.path != null)
         {
-            aiController.path.Clear();
+            aiController.path = null;
         }
         AIManager.FreeChokePoint(target.GetComponent<ChokePoint>());
         aiController.aiRole = AIController.role.Wander;
@@ -64,7 +64,7 @@ public class ArriveState : IEnemyState
     {
         if (aiController.path != null)
         {
-            aiController.path.Clear();
+            aiController.path = null;
         }
         AIManager.FreeChokePoint(target.GetComponent<ChokePoint>());
         aiController.aiRole = AIController.role.Combat;
@@ -77,16 +77,18 @@ public class ArriveState : IEnemyState
             return;
         }
         
-        if (aiController.path.Count > 1 && (aiController.transform.position - aiController.path[0].worldPosition).magnitude < 0.5f)
+        if (aiController.path.Length > 1 && (aiController.transform.position - aiController.path[0]).magnitude < 0.5f)
         {
-            aiController.path.RemoveAt(0);
+            Vector3[] temp = aiController.path;
+            Array.Copy(temp, 1, aiController.path, 0, temp.Length - 1);
         }
-        else if (aiController.path.Count == 1 && Mathf.Abs((aiController.transform.position - aiController.path[0].worldPosition).magnitude) <= aiController.steeringArrive.targetRadius)
+        else if (aiController.path.Length == 1 && Mathf.Abs((aiController.transform.position - aiController.path[0]).magnitude) <= aiController.steeringArrive.targetRadius)
         {
-            aiController.path.RemoveAt(0);
+            Vector3[] temp = aiController.path;
+            Array.Copy(temp, 1, aiController.path, 0, temp.Length - 1);
             ToIdleState();
         }
-        if (aiController.path.Count <= 1)
+        if (aiController.path.Length <= 1)
         {
             if (aiController.steeringSeek.enabled || aiController.steeringWander.enabled)
             {
@@ -98,7 +100,7 @@ public class ArriveState : IEnemyState
                 aiController.steeringArrive.enabled = true;
             }
         }
-        else if(aiController.path.Count > 1)
+        else if(aiController.path.Length > 1)
         {
             if(aiController.steeringArrive.enabled || aiController.steeringWander.enabled)
             {
@@ -110,45 +112,46 @@ public class ArriveState : IEnemyState
                 aiController.steeringSeek.enabled = true;
             }
         }
-        if (target != null && aiController.path != null && aiController.path.Count > 0)
+        if (target != null && aiController.path != null && aiController.path.Length > 0)
         {
-            SetPathTarget(aiController.path[0].worldPosition);
+            SetPathTarget(aiController.path[0]);
             AdjustAlignment();
         }
     }
     public void EnableMovement()
     {
-        if (aiController.path.Count <= 1)
+        if (aiController.path.Length <= 1)
         {
             aiController.steeringArrive.enabled = true;
         }
-        else if (aiController.path.Count > 1)
+        else if (aiController.path.Length > 1)
         {
             aiController.steeringSeek.enabled = true;
         }
     }
     void SetPathTarget(Vector3 nextPosition)
     {
-        if (aiController.path.Count <= 1)
+        if (aiController.path.Length <= 1)
         {
             aiController.steeringArrive.target = nextPosition;
         }
-        else if (aiController.path.Count > 1)
+        else if (aiController.path.Length > 1)
         {
             aiController.steeringSeek.target = nextPosition;
         }
     }
     public void SendAIToNewChokePoint(ChokePoint target) {
         this.target = target;
+        aiController.unit.target = target.transform;
         PathRequestManager.RequestPath(new PathRequest(aiController.transform.position, target.transform.position, aiController.unit.OnPathFound));
     }
     void AdjustAlignment()
     {
-        if (aiController.path.Count <= 1)
+        if (aiController.path.Length <= 1)
         {
             aiController.steeringAlign.target = Mathf.Atan2(aiController.steeringArrive.velocity.x, aiController.steeringArrive.velocity.z) * Mathf.Rad2Deg;
         }
-        else if (aiController.path.Count > 1)
+        else if (aiController.path.Length > 1)
         {
             aiController.steeringAlign.target = Mathf.Atan2(aiController.steeringSeek.velocity.x, aiController.steeringSeek.velocity.z) * Mathf.Rad2Deg;
             aiController.steeringArrive.velocity = aiController.steeringSeek.velocity;

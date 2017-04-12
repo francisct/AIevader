@@ -49,7 +49,7 @@ public class AIController : MonoBehaviour
     private float jumpRecoveryCounter;
     private bool wasInAir;
     [HideInInspector]
-    public List<Node> path = new List<Node>();
+    public Vector3[] path;
     [HideInInspector]
     public AStar aStar;
     [HideInInspector]

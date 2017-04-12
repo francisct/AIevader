@@ -92,8 +92,8 @@ public class AStar : MonoBehaviour
             path.Add(currentNode);
             currentNode = currentNode.parent;
         }
-        aiController.path = path;
         Vector3[] waypoints = SimplifyPath(path);
+        aiController.path = waypoints;
         Array.Reverse(waypoints);
         return waypoints;
 

@@ -39,7 +39,7 @@ public class ChaseState : IEnemyState
     {
         if (aiController.path != null)
         {
-            aiController.path.Clear();
+            aiController.path = null;
         }
         aiController.aiRole = AIController.role.Arrive;
     }
@@ -53,7 +53,7 @@ public class ChaseState : IEnemyState
     {
         if (aiController.path != null)
         {
-            aiController.path.Clear();
+            aiController.path = null;
         }
         aiController.aiRole = AIController.role.Idle;
     }
@@ -62,7 +62,7 @@ public class ChaseState : IEnemyState
     {
         if (aiController.path != null)
         {
-            aiController.path.Clear();
+            aiController.path = null;
         }
         aiController.aiRole = AIController.role.Wander;
     }
@@ -70,7 +70,7 @@ public class ChaseState : IEnemyState
     {
         if (aiController.path != null)
         {
-            aiController.path.Clear();
+            aiController.path = null;
         }
         aiController.combatState.ResetCombatCD();
         aiController.aiRole = AIController.role.Combat;
@@ -83,15 +83,17 @@ public class ChaseState : IEnemyState
         {
             return;
         }
+        aiController.unit.target = chaseTarget.transform;
         PathRequestManager.RequestPath(new PathRequest(aiController.transform.position, chaseTarget.transform.position, aiController.unit.OnPathFound));
-        if (aiController.path.Count > 0 && (aiController.transform.position - aiController.path[0].worldPosition).magnitude < 0.5f)
+        if (aiController.path.Length > 0 && (aiController.transform.position - aiController.path[0]).magnitude < 0.5f)
         {
-            aiController.path.RemoveAt(0);
+            Vector3[] temp = aiController.path;
+            Array.Copy(temp, 1, aiController.path, 0, temp.Length - 1);
         }
         
-        if (chaseTarget != null && aiController.path != null && aiController.path.Count > 0)
+        if (chaseTarget != null && aiController.path != null && aiController.path.Length > 0)
         {
-            aiController.steeringSeek.target = aiController.path[0].worldPosition;
+            aiController.steeringSeek.target = aiController.path[0];
             aiController.steeringSeek.target.y = 0;
 
         }
