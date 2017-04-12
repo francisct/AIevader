@@ -33,7 +33,10 @@ public class ArriveState : IEnemyState
 
     public void ToChaseState()
     {
-        aiController.path.Clear();
+        if (aiController.path != null)
+        {
+            aiController.path.Clear();
+        }
         aiController.audioSource.PlayOneShot(aiController.chaseSound);
         AIManager.FreeChokePoint(target.GetComponent<ChokePoint>());
         aiController.aiRole = AIController.role.Chase;
@@ -41,19 +44,28 @@ public class ArriveState : IEnemyState
 
     public void ToIdleState()
     {
-        aiController.path.Clear();
+        if (aiController.path != null)
+        {
+            aiController.path.Clear();
+        }
         aiController.aiRole = AIController.role.Idle;
     }
 
     public void ToWanderState()
     {
-        aiController.path.Clear();
+        if (aiController.path != null)
+        {
+            aiController.path.Clear();
+        }
         AIManager.FreeChokePoint(target.GetComponent<ChokePoint>());
         aiController.aiRole = AIController.role.Wander;
     }
     public void ToCombatState()
     {
-        aiController.path.Clear();
+        if (aiController.path != null)
+        {
+            aiController.path.Clear();
+        }
         AIManager.FreeChokePoint(target.GetComponent<ChokePoint>());
         aiController.aiRole = AIController.role.Combat;
     }

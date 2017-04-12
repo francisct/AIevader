@@ -31,7 +31,10 @@ public class ChaseState : IEnemyState
 
     public void ToArriveState()
     {
-        aiController.path.Clear();
+        if (aiController.path != null)
+        {
+            aiController.path.Clear();
+        }
         aiController.aiRole = AIController.role.Arrive;
     }
 
@@ -42,18 +45,27 @@ public class ChaseState : IEnemyState
 
     public void ToIdleState()
     {
-        aiController.path.Clear();
+        if (aiController.path != null)
+        {
+            aiController.path.Clear();
+        }
         aiController.aiRole = AIController.role.Idle;
     }
 
     public void ToWanderState()
     {
-        aiController.path.Clear();
+        if (aiController.path != null)
+        {
+            aiController.path.Clear();
+        }
         aiController.aiRole = AIController.role.Wander;
     }
     public void ToCombatState()
     {
-        aiController.path.Clear();
+        if (aiController.path != null)
+        {
+            aiController.path.Clear();
+        }
         aiController.aiRole = AIController.role.Combat;
     }
 
