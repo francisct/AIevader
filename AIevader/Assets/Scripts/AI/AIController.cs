@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class AIController : MonoBehaviour
 {
@@ -53,6 +54,8 @@ public class AIController : MonoBehaviour
     [HideInInspector]
     public AStar aStar;
 
+    private bool dead;
+
     void Awake()
     {
         wanderState = new WanderState(this);
@@ -83,10 +86,10 @@ public class AIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (hitPoints <= 0)
+        if (dead)
         {
-            audioSource.PlayOneShot(deathSound);
-            AIManager.AIKilled(this);
+            DisableMovement();
+            
         }
         SelectRole();
         if (!IsGrounded())
@@ -161,7 +164,21 @@ public class AIController : MonoBehaviour
     }
     void OnCollisionEnter(Collision other)
     {
-        currentState.OnCollisionEnter(other);
+            currentState.OnCollisionEnter(other);
+            if (other.gameObject.tag == "Spikes")
+            {
+                audioSource.PlayOneShot(deathSound);
+                AIManager.AIKilled(this);
+                StartCoroutine(Die());
+            }
+    }
+
+    private IEnumerator Die()
+    {
+        dead = true;
+        yield return new WaitForSeconds(1);
+        GetComponent<Collider>().enabled = false;
+        GameObject.Destroy(gameObject, 4);
     }
     void SelectRole()
     {
