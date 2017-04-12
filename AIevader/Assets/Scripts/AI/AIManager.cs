@@ -17,7 +17,10 @@ public class AIManager : MonoBehaviour
     {
         foreach(Transform child in transform)
         {
-            child.gameObject.SetActive(false);
+            if (child.name != "MonsterSpawner")
+            {
+                child.gameObject.SetActive(false);
+            }
         }
     }
 
