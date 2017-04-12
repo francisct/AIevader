@@ -96,7 +96,7 @@ public class AStar : MonoBehaviour
         }
 
         path.Reverse();
-
+        grid.path = path;
         aiController.path = path;
     }
 
