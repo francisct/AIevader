@@ -12,6 +12,9 @@ public class Grid : MonoBehaviour
     public Vector2 gridWorldSize;
     public float nodeRadius;
     public Node[,] grid;
+    [HideInInspector]
+    public List<Node> path;
+    public bool displayAStarPath;
 
     float nodeDiameter;
     int gridSizeX, gridSizeY;
@@ -28,7 +31,8 @@ public class Grid : MonoBehaviour
 
     public int MaxSize
     {
-        get {
+        get
+        {
             return gridSizeX * gridSizeY;
         }
     }
@@ -114,6 +118,13 @@ public class Grid : MonoBehaviour
             foreach (Node n in grid)
             {
                 Gizmos.color = n.isWalkable ? Color.white : Color.red;
+                if (displayAStarPath && path != null)
+                {
+                    if (path.Contains(n))
+                    {
+                        Gizmos.color = Color.blue;
+                    }
+                }
                 Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - 0.1f));
             }
         }
