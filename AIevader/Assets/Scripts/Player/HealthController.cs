@@ -18,13 +18,12 @@ public class HealthController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        healthBar.Value = (float)health / 100;
+    }
 
     public void TakeDamage(float damage)
     {
         health -= (int)damage;
-        healthBar.Value = health / initialHealth;
         if (health <= 0) gui.GameOver();
     }
 
