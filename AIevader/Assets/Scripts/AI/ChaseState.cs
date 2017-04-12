@@ -72,7 +72,6 @@ public class ChaseState : IEnemyState
         {
             aiController.path.Clear();
         }
-        aiController.combatState.ResetCombatCD();
         aiController.aiRole = AIController.role.Combat;
     }
 
@@ -83,17 +82,25 @@ public class ChaseState : IEnemyState
         {
             return;
         }
-        aiController.aStar.FindPath(aiController.transform.position, chaseTarget.transform.position);
-        if (aiController.path.Count > 0 && (aiController.transform.position - aiController.path[0].worldPosition).magnitude < 0.5f)
+        RaycastHit hit;
+        var direction = chaseTarget.transform.position - aiController.transform.position;
+        if (Physics.Raycast(aiController.transform.position + Vector3.up * 0.5f, direction, out hit) && hit.transform == chaseTarget.transform)
         {
-            aiController.path.RemoveAt(0);
+            aiController.steeringSeek.target = chaseTarget.transform.position;
         }
-        
-        if (chaseTarget != null && aiController.path != null && aiController.path.Count > 0)
-        {
-            aiController.steeringSeek.target = aiController.path[0].worldPosition;
-            aiController.steeringSeek.target.y = 0;
+        else {
+            aiController.aStar.FindPath(aiController.transform.position, chaseTarget.transform.position);
+            if (aiController.path.Count > 0 && (aiController.transform.position - aiController.path[0].worldPosition).magnitude < 0.5f)
+            {
+                aiController.path.RemoveAt(0);
+            }
 
+            if (chaseTarget != null && aiController.path != null && aiController.path.Count > 0)
+            {
+                aiController.steeringSeek.target = aiController.path[0].worldPosition;
+                aiController.steeringSeek.target.y = 0;
+
+            }
         }
         aiController.steeringAlign.target = Mathf.Atan2(aiController.steeringSeek.velocity.x, aiController.steeringSeek.velocity.z) * Mathf.Rad2Deg;
         if (aiController.steeringArrive.enabled || aiController.steeringWander.enabled)
