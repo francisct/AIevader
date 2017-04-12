@@ -72,7 +72,6 @@ public class ChaseState : IEnemyState
         {
             aiController.path.Clear();
         }
-        aiController.combatState.ResetCombatCD();
         aiController.aiRole = AIController.role.Combat;
     }
 
@@ -87,11 +86,9 @@ public class ChaseState : IEnemyState
         var direction = chaseTarget.transform.position - aiController.transform.position;
         if (Physics.Raycast(aiController.transform.position + Vector3.up * 0.5f, direction, out hit) && hit.transform == chaseTarget.transform)
         {
-            Debug.Log("JAMAL");
             aiController.steeringSeek.target = chaseTarget.transform.position;
         }
         else {
-            Debug.Log("LUIGI");
             aiController.aStar.FindPath(aiController.transform.position, chaseTarget.transform.position);
             if (aiController.path.Count > 0 && (aiController.transform.position - aiController.path[0].worldPosition).magnitude < 0.5f)
             {
