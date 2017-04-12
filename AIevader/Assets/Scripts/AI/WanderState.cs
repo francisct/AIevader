@@ -18,7 +18,10 @@ public class WanderState : IEnemyState
 
     public void OnTriggerEnter(Collider other)
     {
-        
+        if (other.tag == "Player")
+        {
+            ToChaseState();
+        }
     }
 
     public void OnTriggerExit(Collider other)
@@ -33,6 +36,7 @@ public class WanderState : IEnemyState
 
     public void ToChaseState()
     {
+        aiController.audioSource.PlayOneShot(aiController.chaseSound);
         aiController.aiRole = AIController.role.Chase;
     }
 
@@ -54,12 +58,16 @@ public class WanderState : IEnemyState
     public void UpdateState()
     {
         var currentPos = aiController.transform.position;
-        var dir = player.transform.position - currentPos + Vector3.up*0.5f;
+        var dir = player.transform.position - currentPos + Vector3.up * 0.5f;
         RaycastHit hit;
-        var a = Physics.Raycast(currentPos, dir, out hit);
         if (Physics.Raycast(currentPos, dir, out hit) && hit.transform == player.transform)
         {
-            aiController.aiManager.ReportSawPlayer(aiController);
+            var direction = player.transform.position - aiController.transform.position;
+            float angle = Vector3.Angle(aiController.transform.forward, direction);
+            if (Mathf.Abs(angle) < 75)
+            {
+                aiController.aiManager.ReportSawPlayer(aiController);
+            }
         }
         if (aiController.steeringArrive.enabled)
         {
@@ -67,8 +75,12 @@ public class WanderState : IEnemyState
         }
         if (!aiController.steeringWander.enabled || !aiController.steeringSeek.enabled)
         {
-            aiController.steeringWander.enabled = true;
-            aiController.steeringSeek.enabled = true;
+            EnableMovement();
         }
+    }
+    public void EnableMovement()
+    {
+        aiController.steeringWander.enabled = true;
+        aiController.steeringSeek.enabled = true;
     }
 }

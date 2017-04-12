@@ -15,7 +15,10 @@ public class IdleState : IEnemyState
 
     public void OnTriggerEnter(Collider other)
     {
-        ToChaseState();
+        if (other.tag == "Player")
+        {
+            ToChaseState();
+        }
     }
 
     public void OnTriggerExit(Collider other)
@@ -30,6 +33,7 @@ public class IdleState : IEnemyState
 
     public void ToChaseState()
     {
+        aiController.audioSource.PlayOneShot(aiController.chaseSound);
         aiController.aiRole = AIController.role.Chase;
     }
 
@@ -49,6 +53,10 @@ public class IdleState : IEnemyState
 
     public void UpdateState()
     {
-        ;
+        
+    }
+    public void EnableMovement()
+    {
+        return;
     }
 }
