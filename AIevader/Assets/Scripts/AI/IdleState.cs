@@ -17,6 +17,7 @@ public class IdleState : IEnemyState
     {
         if (other.tag == "Player")
         {
+            AIManager.FreeChokePointFrinAI(aiController);
             ToChaseState();
         }
     }

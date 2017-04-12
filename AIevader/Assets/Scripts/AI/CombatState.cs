@@ -5,18 +5,25 @@ public class CombatState : IEnemyState
 {
     private AIController aiController;
     private GameObject player;
-    private float timeCounter = 0f;
+    
     private float CD = 1.5f;
+    private float timeCounter = 1.5f;
     private float attackRange = 2.5f;
-
+    private Rigidbody rigidBody;
     public CombatState(AIController aiController)
     {
+        timeCounter = CD;
         this.aiController = aiController;
         player = GameObject.FindGameObjectWithTag("Player");
+        rigidBody = aiController.GetComponent<Rigidbody>();
     }
     public void OnCollisionEnter(Collision other)
     {
-        ;
+        if(other.gameObject.tag == "Player")
+        {
+            rigidBody.velocity = new Vector3(0, rigidBody.velocity.y, 0);
+            aiController.steeringSeek.target = aiController.transform.position;
+        }
     }
 
     public void OnTriggerEnter(Collider other)
@@ -36,7 +43,6 @@ public class CombatState : IEnemyState
 
     public void ToChaseState()
     {
-        aiController.audioSource.PlayOneShot(aiController.chaseSound);
         aiController.aiRole = AIController.role.Chase;
     }
 
@@ -61,7 +67,10 @@ public class CombatState : IEnemyState
         
         float angle = Vector3.Angle(aiController.transform.forward, direction);
         float distance = direction.magnitude;
-
+        if(distance > attackRange)
+        {
+            ToChaseState();
+        }
         if (Mathf.Abs(angle) < 60 &&  distance < attackRange && timeCounter > CD){
             timeCounter = 0f;
             var rand = UnityEngine.Random.Range(1, 9);
@@ -102,5 +111,9 @@ public class CombatState : IEnemyState
     public void EnableMovement()
     {
         return;
+    }
+    public void ResetCombatCD()
+    {
+        timeCounter = CD;
     }
 }
