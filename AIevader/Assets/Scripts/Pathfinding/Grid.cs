@@ -16,7 +16,6 @@ public class Grid : MonoBehaviour
     float nodeDiameter;
     int gridSizeX, gridSizeY;
 
-    public List<Node> path;
 
     // Use this for initialization
     void Start()
@@ -25,6 +24,13 @@ public class Grid : MonoBehaviour
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
         CreateGrid();
+    }
+
+    public int MaxSize
+    {
+        get {
+            return gridSizeX * gridSizeY;
+        }
     }
 
     void CreateGrid()
@@ -99,24 +105,16 @@ public class Grid : MonoBehaviour
         int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
         return grid[x, y];
     }
-
     void OnDrawGizmos()
     {
-        Gizmos.DrawCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
 
+        Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
         if (grid != null)
         {
             foreach (Node n in grid)
             {
-                Gizmos.color = (n.isWalkable) ? Color.green : Color.red;
-                if (path != null)
-                {
-                    if (path.Contains(n))
-                    {
-                        Gizmos.color = Color.blue;
-                    }
-                }
-                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - 0.04f));
+                Gizmos.color = n.isWalkable ? Color.white : Color.red;
+                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - 0.1f));
             }
         }
     }

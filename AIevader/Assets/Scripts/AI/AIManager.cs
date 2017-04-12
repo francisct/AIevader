@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AIManager : MonoBehaviour
@@ -12,6 +13,17 @@ public class AIManager : MonoBehaviour
     private static List<AIController> busyAIs = new List<AIController>();
     private static GameObject player;
     private static int currentAIsAlive;
+
+    void Awake()
+    {
+        foreach(Transform child in transform)
+        {
+            if (child.name != "MonsterSpawner")
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
+    }
 
     // Use this for initialization
     void Start()
@@ -93,6 +105,12 @@ public class AIManager : MonoBehaviour
         occupiedChokePoints.Remove(cp);
         availableChokePoints.Add(cp);
     }
+    public static void FreeChokePointFrinAI(AIController ai)
+    {
+        var cp = chokePointAIs.FirstOrDefault(x => x.Value == ai).Key;
+        occupiedChokePoints.Remove(cp);
+        availableChokePoints.Add(cp);
+    }
     /// <summary>
     /// Find the closest available AI to Transform t
     /// </summary>
@@ -122,7 +140,7 @@ public class AIManager : MonoBehaviour
     {
         foreach (AIController ai in busyAIs)
         {
-            if (ai.aiRole == AIController.role.Chase)
+            if (ai.aiRole == AIController.role.Chase || ai.aiRole == AIController.role.Combat)
             {
                 return true;
             }
@@ -146,7 +164,7 @@ public class AIManager : MonoBehaviour
 
     private void SendAIToWander(AIController ai)
     {
-        OccupiedAI(ai);
+        FreeAI(ai);
         ai.aiRole = AIController.role.Wander;
     }
 
@@ -162,7 +180,7 @@ public class AIManager : MonoBehaviour
         chokePointAIs[target] = ai;
         OccupiedChokePoint(target);
         ai.aiRole = AIController.role.Arrive;
-        ai.arriveState.target = target;
+        ai.arriveState.SendAIToNewChokePoint(target);
     }
 
     private void SendAIToCombat(AIController ai)
@@ -184,14 +202,7 @@ public class AIManager : MonoBehaviour
     }
     private void UpdateChokePointAI()
     {
-        if (availableChokePoints.Count == 0)
-        {
-            foreach (AIController ai in commandableAIs)
-            {
-                SendAIToWander(ai);
-            }
-        }
-        else
+        if (availableChokePoints.Count > 0)
         {
             List<ChokePoint> keys = new List<ChokePoint>(chokePointAIs.Keys);
             foreach (ChokePoint key in keys)

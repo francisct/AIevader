@@ -5,8 +5,8 @@ public class SteeringSeek : MonoBehaviour
 
     public Vector3 target;
     public Vector3 velocity;
-    public int maxAcceleration = 45;
-    public int maxSpeed = 25;
+    public float maxAcceleration = 45;
+    public float maxSpeed = 25;
     private AIController aiController;
     void Start()
     {

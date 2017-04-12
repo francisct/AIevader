@@ -4,8 +4,8 @@ public class SteeringArrive : MonoBehaviour
 {
     public Vector3 target;
     public Vector3 velocity;
-    public int maxAcceleration = 2;
-    public int maxSpeed = 4;
+    public float maxAcceleration = 2;
+    public float maxSpeed = 4;
     public float targetRadius = 0.1f;
     public float slowRadius = 5.0f;
     public float timeToTarget = 0.1f;

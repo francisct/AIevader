@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 /// <summary>
 /// A* node
 /// </summary>
-public class Node
+public class Node : IHeapItem<Node>
 {
 
     public bool isWalkable;
@@ -15,6 +16,7 @@ public class Node
     public int gCost;
     public int hCost;
     public Node parent;
+    public int heapIndex;
 
     public Node(bool isWalkable, Vector3 worldPosition, int gridX, int gridY)
     {
@@ -24,17 +26,34 @@ public class Node
         this.gridY = gridY;
     }
 
-    public Node(bool isWalkable, Vector3 worldPosition)
-    {
-        this.isWalkable = isWalkable;
-        this.worldPosition = worldPosition;
-    }
-
     public int fCost
     {
         get
         {
             return gCost + hCost;
         }
+    }
+
+    public int HeapIndex
+    {
+        get
+        {
+            return heapIndex;
+        }
+
+        set
+        {
+            heapIndex = value;
+        }
+    }
+
+    public int CompareTo(Node other)
+    {
+        int compare = fCost.CompareTo(other.fCost);
+        if (compare == 0)
+        {
+            compare = hCost.CompareTo(other.hCost);
+        }
+        return -compare;
     }
 }

@@ -5,7 +5,8 @@ public class WanderState : IEnemyState
 {
     private AIController aiController;
     private GameObject player;
-
+    private float visibilityRange = 20;
+    private float visibilityAngle = 75;
     public WanderState(AIController aiController)
     {
         this.aiController = aiController;
@@ -20,7 +21,7 @@ public class WanderState : IEnemyState
     {
         if (other.tag == "Player")
         {
-            ToChaseState();
+            aiController.aiManager.ReportSawPlayer(aiController);
         }
     }
 
@@ -58,13 +59,15 @@ public class WanderState : IEnemyState
     public void UpdateState()
     {
         var currentPos = aiController.transform.position;
-        var dir = player.transform.position - currentPos + Vector3.up * 0.5f;
+        var dir = player.transform.position - currentPos;
+        dir.y = 0;
         RaycastHit hit;
-        if (Physics.Raycast(currentPos, dir, out hit) && hit.transform == player.transform)
+
+        if (Physics.Raycast(currentPos + Vector3.up * 0.5f, dir, out hit) && hit.transform == player.transform)
         {
             var direction = player.transform.position - aiController.transform.position;
             float angle = Vector3.Angle(aiController.transform.forward, direction);
-            if (Mathf.Abs(angle) < 75)
+            if (Mathf.Abs(angle) < visibilityAngle)
             {
                 aiController.aiManager.ReportSawPlayer(aiController);
             }

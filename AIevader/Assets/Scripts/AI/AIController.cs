@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AIController : MonoBehaviour
@@ -47,6 +48,11 @@ public class AIController : MonoBehaviour
     private float jumpRecoveryTime;
     private float jumpRecoveryCounter;
     private bool wasInAir;
+    [HideInInspector]
+    public List<Node> path = new List<Node>();
+    [HideInInspector]
+    public AStar aStar;
+
     void Awake()
     {
         wanderState = new WanderState(this);
@@ -61,6 +67,7 @@ public class AIController : MonoBehaviour
         steeringWander = GetComponent<SteeringWander>();
         audioSource = GetComponent<AudioSource>();
         capsuleCollider = GetComponent<CapsuleCollider>();
+        aStar = GetComponent<AStar>();
         velocity = Vector3.zero;
         jumpRecoveryTime = 0.4f;
         wasInAir = false;
@@ -102,14 +109,22 @@ public class AIController : MonoBehaviour
             
         }
         
-        if (!playedSpawnSound && animator.GetCurrentAnimatorStateInfo(0).IsTag("Roar"))
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("Spawn") || animator.GetCurrentAnimatorStateInfo(0).IsTag("Roar"))
         {
-            audioSource.PlayOneShot(spawnSound);
-            playedSpawnSound = true;
+            DisableMovement();
+            steeringAlign.enabled = false;
+            if (!playedSpawnSound && animator.GetCurrentAnimatorStateInfo(0).IsTag("Roar"))
+            {
+                audioSource.PlayOneShot(spawnSound);
+                playedSpawnSound = true;
+            }
         }
         else if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Spawn") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Roar") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Land") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Air"))
         {
+            steeringAlign.enabled = true;
             currentState.UpdateState();
+            currentState.EnableMovement();
+            
         }
 
         UpdateAnimation();
@@ -119,7 +134,7 @@ public class AIController : MonoBehaviour
     private void UpdateAnimation()
     {
         var speed = velocity.magnitude;
-        if (speed > runningAnimationTrigger)
+        if (speed >= runningAnimationTrigger)
         {
             animator.SetBool("isRunning", true);
         }
