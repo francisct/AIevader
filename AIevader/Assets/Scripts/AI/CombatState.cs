@@ -9,6 +9,7 @@ public class CombatState : IEnemyState
     private float CD = 1.5f;
     private float timeCounter = 1.5f;
     private float attackRange = 2.5f;
+    private float attackDamage = 25.0f;
     private Rigidbody rigidBody;
     public CombatState(AIController aiController)
     {
@@ -94,7 +95,7 @@ public class CombatState : IEnemyState
             distance = direction.magnitude;
             if (distance <= attackRange)
             {
-                //player get hit
+                player.GetComponent<HealthController>().TakeDamage(attackDamage);
             }
 
         }

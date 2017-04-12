@@ -22,7 +22,7 @@ public class ExpandexController : MonoBehaviour {
 
     private bool expanded;
 
-    Rigidbody onTop;
+    Rigidbody target;
 
     // Use this for initialization
     void Start () {
@@ -39,13 +39,20 @@ public class ExpandexController : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        onTop = collision.rigidbody;
-        //OnActivate();
+        //if 
+        if (expandIntent)
+        {
+            target = collision.rigidbody;
+            CreateImpulse(target);
+        }
+        else
+            target = collision.rigidbody;
+        
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        onTop = null;
+        target = null;
     }
 
     public void ToggleActivation()
@@ -62,7 +69,7 @@ public class ExpandexController : MonoBehaviour {
         journeyLength = Vector3.Distance(initialScale, finalScale);
         expandIntent = true;
 
-        if (onTop) CreateImpulse(onTop);
+        if (target) CreateImpulse(target);
     }
 
     public void Deactivate()
@@ -74,9 +81,9 @@ public class ExpandexController : MonoBehaviour {
         shrinkIntent = true;
     }
 
-    private void CreateImpulse(Rigidbody onTop)
+    private void CreateImpulse(Rigidbody target)
     {
-        onTop.AddForce(transform.up * impulseForce + Vector3.up * 50, ForceMode.Impulse);
+        target.AddForce(transform.up * impulseForce + Vector3.up * 50, ForceMode.Impulse);
     }
 
     private void Expand()
