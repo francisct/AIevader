@@ -12,7 +12,7 @@ public class AIManager : MonoBehaviour
     private static Dictionary<ChokePoint, AIController> chokePointAIs = new Dictionary<ChokePoint, AIController>();
     private static List<AIController> busyAIs = new List<AIController>();
     private static GameObject player;
-    private static int currentAIsAlive;
+    public static int currentAIsAlive;
 
     void Awake()
     {
