@@ -29,10 +29,10 @@ public class ExpandexRemote : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (!deployedExpandex || !deployedExpandex2)
-                StickExpandex();
-            else if (deployedExpandex || deployedExpandex2 && allowedToTakeExpandex1 || allowedToTakeExpandex2)
+            if (deployedExpandex && allowedToTakeExpandex1 || deployedExpandex2 && allowedToTakeExpandex2)
                 PickupExpandex();
+            else if (!deployedExpandex || !deployedExpandex2)
+                StickExpandex();
         }
         else if (Input.GetKeyDown(KeyCode.E))
             ToggleExpandexActivation();
