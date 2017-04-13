@@ -6,8 +6,8 @@ public class WinCondition : MonoBehaviour
 {
     public GameObject winPanel;
     public AIManager AIManager;
-    public GameObject winWall;
 
+    private GameObject winWall;
     private bool canLeave;
 
     void Start()
