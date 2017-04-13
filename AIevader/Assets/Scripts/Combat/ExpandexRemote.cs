@@ -6,10 +6,12 @@ public class ExpandexRemote : MonoBehaviour
 {
 
     [SerializeField]
-    private GameObject expandexPrefab;
-    private GameObject deployedExpandex;
-    private ExpandexController expandex;
-    private bool allowedToTakeExpandex;
+    private GameObject expandexPrefab, expandexPrefab2;
+    private GameObject deployedExpandex, deployedExpandex2;
+    private ExpandexController [] expandex = new ExpandexController [2];
+    private bool allowedToTakeExpandex1, allowedToTakeExpandex2;
+    private bool canCreateExpandex1 = true;
+    private bool canCreateExpandex2 = true;
     [SerializeField]
     private Transform camera;
     [SerializeField]
@@ -27,9 +29,9 @@ public class ExpandexRemote : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (!deployedExpandex)
+            if (!deployedExpandex || !deployedExpandex2)
                 StickExpandex();
-            else if (deployedExpandex && allowedToTakeExpandex)
+            else if (deployedExpandex || deployedExpandex2 && allowedToTakeExpandex1 || allowedToTakeExpandex2)
                 PickupExpandex();
         }
         else if (Input.GetKeyDown(KeyCode.E))
@@ -41,7 +43,11 @@ public class ExpandexRemote : MonoBehaviour
     private void ToggleExpandexActivation()
     {
         if (deployedExpandex)
-            expandex.ToggleActivation();
+            if(expandex[0])
+                expandex[0].ToggleActivation();
+        if(deployedExpandex2)
+            if (expandex[1])
+                expandex[1].ToggleActivation();     
     }
     
 
@@ -52,31 +58,57 @@ public class ExpandexRemote : MonoBehaviour
         {
             Vector3 position = hit.point;
 
-            deployedExpandex = Instantiate(expandexPrefab, position, Quaternion.identity) as GameObject;
-            deployedExpandex.transform.up = hit.normal;
-            expandex = GameObject.Find("ScaleFromOneSide").GetComponent<ExpandexController>();
+            if(canCreateExpandex1)
+            {
+                deployedExpandex = Instantiate(expandexPrefab, position, Quaternion.identity) as GameObject;
+                deployedExpandex.transform.up = hit.normal;
+                expandex[0] = GameObject.Find("ScaleFromOneSide").GetComponent<ExpandexController>();
+                canCreateExpandex1 = false;
+            }
+            else if(canCreateExpandex2)
+            {
+                deployedExpandex2 = Instantiate(expandexPrefab2, position, Quaternion.identity) as GameObject;
+                deployedExpandex2.transform.up = hit.normal;
+                expandex[1] = GameObject.Find("ScaleFromOneSide2").GetComponent<ExpandexController>();
+                canCreateExpandex2 = false;
+            }  
         }
     }
     
 
     private void PickupExpandex()
     {
-        Destroy(deployedExpandex);
-        deployedExpandex = null;
-        allowedToTakeExpandex = false;
+        if(allowedToTakeExpandex1)
+        {
+            Destroy(deployedExpandex);
+            deployedExpandex = null;
+            allowedToTakeExpandex1 = false;
+            canCreateExpandex1 = true;
+        }
+        else if(allowedToTakeExpandex2)
+        {
+            Destroy(deployedExpandex2);
+            deployedExpandex2 = null;
+            allowedToTakeExpandex2 = false;
+            canCreateExpandex2 = true;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         GameObject obj = collision.gameObject;
         if (obj.name == "ScaleFromOneSide")
-            allowedToTakeExpandex = true;
+            allowedToTakeExpandex1 = true;
+        if (obj.name == "ScaleFromOneSide2")
+            allowedToTakeExpandex2 = true;
     }
 
     private void OnCollisionExit(Collision collision)
     {
         GameObject obj = collision.gameObject;
         if (obj.name == "ScaleFromOneSide")
-            allowedToTakeExpandex = false;
+            allowedToTakeExpandex1 = false;
+        if (obj.name == "ScaleFromOneSide2")
+            allowedToTakeExpandex2 = false;
     }
 }
